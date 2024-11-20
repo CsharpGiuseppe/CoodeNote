@@ -1,39 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="All-Pay cashBack">
+  <meta name="description" content="All-Pay cashBack">
+  <meta name="copyright" content="All-Pay cashBack">
+  <meta HTTP-EQUIV="keywords" content="All-Pay cashBack">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="dc.language" content="ita" scheme="RFC1766">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Cache-Control" content="post-check=0, pre-check=0" false>
   <title>Note App</title>
   <link rel="stylesheet" href="style.css">
   <!-- Monaco Editor CDN -->
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
 </head>
+
 <body>
   <div class="app">
+    <div class="hamburger">
+
+    </div>
     <!-- Sidebar -->
     <div class="sidebar">
-      <button id="new-note" class="btn">+ Nuovo</button>
-      <ul id="notes-list"></ul>
-      
-    </div>
+      <i class="ri-menu-add-fill"></i>
 
+      <button id="new-note" class="btn"><i class="ri-file-add-line"></i></button>
+      <ul id="notes-list"></ul>
+
+    </div>
+    <div class="clap">
+
+    </div>
     <!-- Editor -->
     <div class="editor">
-        <div class="lang">
-            <p>Select Language</p>
-            <select id="language-selector">
-            <option value="javascript">JavaScript</option>
-            <option value="html">HTML</option>
-            <option value="csharp">C#</option>
-            <option value="cpp">C++</option>
-          </select>
+      <div class="lang">
+        <p>Select Language</p>
+        <select id="language-selector">
+          <option value="html">HTML</option>
+          <option value="javascript">JavaScript</option>
+          <option value="csharp">C#</option>
+          <option value="cpp">C++</option>
+          <option value="css">CSS</option>
+        </select>
+        <div class="preview-controls">
+          <button id="open-in-new-tab">Open in New Tab</button>
+         
         </div>
-       
-      <div id="editor-container"></div>
+        <div class="prev"><i class="ri-file-add-line"></i></div>
+      </div>
+
+      <div class="wrapCont" id="editor-container"></div>
+      <div class="preview">
+        <p>Live Preview</p>
+        <iframe id="preview-frame"></iframe>
+      </div>
     </div>
+
   </div>
 
   <script src="script.js"></script>
 </body>
+
 </html>
