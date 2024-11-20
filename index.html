@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Note App</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Monaco Editor CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <button id="new-note" class="btn">+ Nuovo</button>
+      <ul id="notes-list"></ul>
+      
+    </div>
+
+    <!-- Editor -->
+    <div class="editor">
+        <div class="lang">
+            <p>Select Language</p>
+            <select id="language-selector">
+            <option value="javascript">JavaScript</option>
+            <option value="html">HTML</option>
+            <option value="csharp">C#</option>
+            <option value="cpp">C++</option>
+          </select>
+        </div>
+       
+      <div id="editor-container"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

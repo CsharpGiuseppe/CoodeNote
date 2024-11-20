@@ -1,0 +1,106 @@
+/* Stile generale */
+*{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+scroll-behavior: smooth;
+scrollbar-width: thin;
+scrollbar-color: rgb(31, 30, 30) rgb(56, 56, 56);
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+  }
+  
+  /* Contenitore principale */
+  .app {
+    display: flex;
+    width: 100%;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 20%;
+    background-color: #272727;
+    border-right: 1px solid #f1b50e;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+  
+  .sidebar .btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #444444;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    color: rgb(255, 255, 255);
+    background-color: #272727;
+    border-bottom: 1px #f1b50e solid;
+    margin-bottom: 5px;
+    /* border: 1px solid #ccc; */
+    cursor: pointer;
+  }
+  
+  .sidebar li .note-name {
+    flex-grow: 1;
+    margin-right: 10px;
+  }
+  
+  .sidebar li .delete-note {
+    /* background: #ff4d4d; */
+    background-color: transparent;
+    color: rgb(247, 5, 5);
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    border-radius: 3px;
+  }
+  
+  /* Editor */
+  .editor {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #171717;
+  }
+  .lang{
+display: flex;
+align-items: center;
+color: white;
+font-family: 'Courier New', Courier, monospace;
+font-size: 12px;
+flex-direction: row;    
+padding: 10px;
+  }
+  #language-selector {
+    margin: 10px;
+    padding: 5px;
+    align-self: flex-start;
+  }
+  
+  #editor-container {
+    flex-grow: 1;
+    margin: 10px;
+    
+    /* border: 1px solid #ccc; */
+    height: calc(100% - 50px); /* Tolto il margine del selettore */
+  }
+  
