@@ -16,14 +16,34 @@ require(['vs/editor/editor.main'], function () {
     function createNoteModel(content, language) {
         return monaco.editor.createModel(content, language);
     }
+    let noteCounter = 0; // Contatore globale per le note
 
+    // // Aggiungi nuova nota
+    // document.getElementById('new-note').addEventListener('click', () => {
+    //     const noteId = Date.now().toString(); // Genera un ID unico per la nota
+    //     const selectedLanguage = document.getElementById('language-selector').value; // Ottieni il linguaggio selezionato
+
+    //     // Crea una nuova nota con un modello associato
+    //     notes[noteId] = {
+    //         content: '',
+    //         language: selectedLanguage,
+    //         model: createNoteModel('', selectedLanguage) // Crea un modello vuoto con il linguaggio selezionato
+    //     };
+
+    //     renderNotes();
+    //     selectNote(noteId); // Seleziona automaticamente la nuova nota
+    // });
     // Aggiungi nuova nota
     document.getElementById('new-note').addEventListener('click', () => {
         const noteId = Date.now().toString(); // Genera un ID unico per la nota
         const selectedLanguage = document.getElementById('language-selector').value; // Ottieni il linguaggio selezionato
 
+        noteCounter++; // Incrementa il contatore
+        const defaultNoteName = `Code ${noteCounter}`; // Nome progressivo basato sul contatore
+
         // Crea una nuova nota con un modello associato
         notes[noteId] = {
+            name: defaultNoteName, // Assegna il nome predefinito
             content: '',
             language: selectedLanguage,
             model: createNoteModel('', selectedLanguage) // Crea un modello vuoto con il linguaggio selezionato
@@ -33,22 +53,65 @@ require(['vs/editor/editor.main'], function () {
         selectNote(noteId); // Seleziona automaticamente la nuova nota
     });
 
+
     // Renderizza l'elenco delle note
+    // function renderNotes() {
+    //     notesList.innerHTML = '';
+    //     Object.entries(notes).forEach(([id, note]) => {
+    //         const noteElement = document.createElement('li');
+
+    //         // Nome della nota
+    //         const noteName = document.createElement('span');
+    //         noteName.textContent = note.name || `Code ${Object.keys(notes).length}`;
+    //         noteName.classList.add('note-name');
+    //         noteName.contentEditable = true; // Rende il nome modificabile
+    //         noteName.addEventListener('blur', () => {
+    //             note.name = noteName.textContent.trim();
+    //             renderNotes();
+    //         });
+
+    //         // Pulsante Cancella
+    //         const deleteButton = document.createElement('button');
+    //         deleteButton.innerHTML = '<i class="ri-delete-bin-line"></i>';
+    //         deleteButton.classList.add('delete-note');
+    //         deleteButton.addEventListener('click', (e) => {
+    //             e.stopPropagation(); // Evita che la selezione venga cambiata cliccando su "Cancella"
+    //             delete notes[id];
+    //             renderNotes();
+    //             if (currentNoteId === id) {
+    //                 editor.setValue('');
+    //                 currentNoteId = null;
+    //             }
+    //         });
+
+    //         noteElement.appendChild(noteName);
+    //         noteElement.appendChild(deleteButton);
+    //         noteElement.dataset.id = id;
+
+    //         // Event Listener per selezionare la nota
+    //         noteElement.addEventListener('click', () => {
+    //             saveCurrentNote();
+    //             selectNote(id);
+    //         });
+
+    //         notesList.appendChild(noteElement);
+    //     });
+    // }
     function renderNotes() {
         notesList.innerHTML = '';
         Object.entries(notes).forEach(([id, note]) => {
             const noteElement = document.createElement('li');
-
+    
             // Nome della nota
             const noteName = document.createElement('span');
             noteName.textContent = note.name || `Code ${Object.keys(notes).length}`;
             noteName.classList.add('note-name');
             noteName.contentEditable = true; // Rende il nome modificabile
             noteName.addEventListener('blur', () => {
-                note.name = noteName.textContent.trim();
+                note.name = noteName.textContent.trim(); // Aggiorna il nome della nota
                 renderNotes();
             });
-
+    
             // Pulsante Cancella
             const deleteButton = document.createElement('button');
             deleteButton.innerHTML = '<i class="ri-delete-bin-line"></i>';
@@ -62,21 +125,21 @@ require(['vs/editor/editor.main'], function () {
                     currentNoteId = null;
                 }
             });
-
+    
             noteElement.appendChild(noteName);
             noteElement.appendChild(deleteButton);
             noteElement.dataset.id = id;
-
+    
             // Event Listener per selezionare la nota
             noteElement.addEventListener('click', () => {
                 saveCurrentNote();
                 selectNote(id);
             });
-
+    
             notesList.appendChild(noteElement);
         });
     }
-
+    
     // Seleziona una nota
     function selectNote(noteId) {
         currentNoteId = noteId;
@@ -109,7 +172,7 @@ require(['vs/editor/editor.main'], function () {
         if (currentNoteId) {
             notes[currentNoteId].content = editor.getValue();
         }
-    
+
         // Anteprima live solo per HTML
         const language = notes[currentNoteId]?.language || 'html';
         if (language === 'html') {
@@ -130,7 +193,7 @@ require(['vs/editor/editor.main'], function () {
             alert('Live preview is only available for HTML content.');
         }
     });
-    
+
 
     renderNotes(); // Mostra l'elenco delle note all'avvio
 });
@@ -142,9 +205,9 @@ let sid = document.querySelector('.sidebar');
 let edit = document.querySelector('.editor');
 
 btnSwitch.addEventListener('click', () => {
-  txt.classList.toggle('active');
-  sid.classList.toggle('active');
-  edit.classList.toggle('active');
+    txt.classList.toggle('active');
+    sid.classList.toggle('active');
+    edit.classList.toggle('active');
 });
 
 const btnPrev = document.querySelector('.prev');
@@ -152,4 +215,4 @@ let previewr = document.querySelector('.preview')
 btnPrev.addEventListener('click', () => {
     previewr.classList.toggle('active');
 
-  });
+});
