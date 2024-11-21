@@ -198,6 +198,31 @@ padding: 10px;
     background-color: #444;
     padding: 5px;
 }
+.prev{
+padding: 5px;
+font-size: 25px; 
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+}
+.prev i{
+padding: 0px;
+font-size: 20px; 
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+
+}
+.prev p{
+padding: 10px;
+font-size: 12px; 
+display: flex;
+align-items: center;
+justify-content: center;
+}
 
 #open-in-new-tab {
     color: white;
