@@ -400,8 +400,8 @@ require(['vs/editor/editor.main'], function () {
     
             // Set a new timeout to save after 1 second of inactivity
            this.autoSaveTimeout = setTimeout(() => {
-                // saveCurrentNote(); // Call the save function
-                Invoke(new saveCurrentNote());
+                saveCurrentNote(); // Call the save function
+                
                 console.log('Auto-saved note:', notes[currentNoteId]); // Log the auto-save action
             }, 500); // Adjust the time as needed (1000 milliseconds = 1 second)
         }
