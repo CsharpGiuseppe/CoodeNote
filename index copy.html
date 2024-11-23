@@ -26,13 +26,9 @@
     </div>
     <!-- Sidebar -->
     <div class="sidebar">
-      <div class="opeMenus">
-        <i class="ri-menu-add-fill"></i>
-        <i class="ri-contract-left-right-fill"></i>
-      </div>
-      
+      <i class="ri-menu-add-fill"></i>
 
-      <button id="new-note" class="btn"><i class="ri-file-add-line"></i> NewNote</button>
+      <button id="new-note" class="btn"><i class="ri-file-add-line"></i></button>
       <ul id="notes-list"></ul>
 
     </div>
@@ -42,8 +38,6 @@
     <!-- Editor -->
     <div class="editor">
       <div class="lang">
-
-
         <p>Select Language</p>
         <select id="language-selector">
           <option value="html">HTML</option>
@@ -53,33 +47,11 @@
           <option value="css">CSS</option>
           <option value="note">NotePad</option>
         </select>
-
-        <!-- Menu -->
-        <div class="wrapperMenu">
-          <div class="preview-controls">
-            <button id="open-in-new-tab"><i class="ri-eye-line"></i> LivePrevieW NewTab</button>
-            <div class="prev"><i class="ri-eye-line"></i>
-              <p> LivePrevie</p>
-            </div>
-          </div>
-          
-          <div class="database-controls">
-            <button id="export-db"><i class="ri-database-2-line"></i> Esporta Database</button>
-            <button id="import-db"><i class="ri-import-line"></i> Importa Database</button>
-            <input type="file" id="import-file" style="display: none;" />
-            <button id="save-notes-to-file"><i class="ri-save-3-line"></i> Salva Note in File</button>
-            <input type="file" id="load-notes-from-file" style="display: none;" />
-            <label for="load-notes-from-file"><i class="ri-git-repository-commits-line"></i> Carica Note da File</label>
-          </div>
-          
+        <div class="preview-controls">
+          <button id="open-in-new-tab">Open in New Tab</button>
+         
         </div>
-
-        <!-- Hamburger menu -->
-        <div class="hamburg">
-          <i class="ri-menu-fill" id="btn44"></i>
-        </div>
-
-
+        <div class="prev"><i class="ri-eye-line"></i><p>LivePrevie</p></div>
       </div>
 
       <div class="wrapCont" id="editor-container"></div>
