@@ -24,6 +24,7 @@ function renderNotes() {
         noteName.contentEditable = true; // Rende il nome modificabile
         noteName.addEventListener('blur', () => {
             note.name = noteName.textContent.trim(); // Aggiorna il nome della nota
+            
             renderNotes();
         });
         // Pulsante Cancella
@@ -99,6 +100,7 @@ async function syncDeletedNotes() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ id: note.id })
+                   
                 });
 
                 if (response.ok) {
@@ -110,6 +112,7 @@ async function syncDeletedNotes() {
             } catch (error) {
                 console.error(`Errore durante la sincronizzazione dell'eliminazione per la nota ${note.id}: ${error.message}`);
             }
+            deleteNote(note.id);
         }
     };
 }
@@ -123,48 +126,83 @@ function removeDeletedNoteFromDB(noteId) {
 }
 async function syncNotes() {
     try {
-        const response = await fetch('http://localhost/notes/load.php');
+        const response = await fetch(`${serverURL}/load.php`);
         if (!response.ok) {
             throw new Error('Errore nella risposta del server');
         }
 
         const remoteNotes = await response.json();
-        remoteNotes.forEach(note => {
-            // Aggiorna IndexedDB con le note del server
-            saveNoteToDB({
-                id: note.id,
-                name: note.name,
-                content: note.content,
-                language: note.language
-            });
 
-            // Aggiorna la memoria locale
-            notes[note.id] = {
-                id: note.id,
-                name: note.name,
-                content: note.content,
-                language: note.language,
-                model: createNoteModel(note.content, note.language)
+        remoteNotes.forEach(note => {
+            // Controlla se la nota esiste in IndexedDB e ha `needsSync: true`
+            const transaction = db.transaction(['notes'], 'readonly');
+            const store = transaction.objectStore('notes');
+            const request = store.get(note.id);
+
+            request.onsuccess = () => {
+                const localNote = request.result;
+
+                if (localNote && localNote.needsSync) {
+                    console.log(`Nota locale con ID ${note.id} ha modifiche offline, non sovrascrivere.`);
+                    return; // Saltiamo la sincronizzazione per questa nota
+                }
+
+                // Aggiorna IndexedDB con la nota dal server
+                saveNoteToDB({
+                    id: note.id,
+                    name: note.name,
+                    content: note.content,
+                    language: note.language,
+                    needsSync: false // Dal server, non necessita di sincronizzazione
+                });
+
+                // Aggiorna la memoria locale
+                notes[note.id] = {
+                    id: note.id,
+                    name: note.name,
+                    content: note.content,
+                    language: note.language,
+                    model: createNoteModel(note.content, note.language)
+                };
+
+                console.log(`Nota aggiornata da remoto: ${note.id}`);
+            };
+
+            request.onerror = (event) => {
+                console.error(`Errore nel controllo della nota ${note.id}:`, event.target.error);
             };
         });
 
         renderNotes(); // Aggiorna l'interfaccia utente
-        console.log('Sincronizzazione completata con il server remoto');
     } catch (error) {
         console.error('Errore durante la sincronizzazione delle note:', error.message);
     }
 }
 async function synchronizeData() {
-    await saveCurrentNote();
+    console.log('Inizio sincronizzazione...');
+
+    await syncModifiedNotes(); // Sincronizza le modifiche offline prima
     await syncDeletedNotes(); // Sincronizza le eliminazioni
-    await syncNotes(); // Sincronizza modifiche e aggiunte
+    await syncNotes(); // Aggiorna le note dal server remoto
+
+    console.log('Sincronizzazione completata con il server remoto');
 }
+
+// async function synchronizeData() {
+//     await syncDeletedNotes(); // Sincronizza le eliminazioni
+//     await syncModifiedNotes(); // Sincronizza le modifiche fatte offline
+//     await syncNotes(); // Sincronizza modifiche e aggiunte dal server remoto
+//     // await syncDeletedNotes(); // Sincronizza le eliminazioni
+//     // await syncNotes(); // Sincronizza modifiche e aggiunte
+//     // await saveCurrentNote();
+// }
 
 // Seleziona una nota
 function selectNote(noteId) {
     currentNoteId = noteId;
     const note = notes[noteId];
     editor.setModel(note.model); // Imposta il modello della nota selezionata
+    saveCurrentNote();
    
 }
 function saveNotesToFile() {
@@ -216,61 +254,166 @@ function loadNotesFromFile(event) {
 
 
 // CON QUESTA FUNZIONE SALVO PRIMA NEL SERVER REMOTO SE NON ESISTE SALVO INindexDB comunque salvo in tutti e due cosi se non esiste il db recupero solo dal db indexDB
+// function saveCurrentNote() {
+//     if (currentNoteId) {
+//         const note = notes[currentNoteId];
+//         // note.content = editor.getValue(); // Aggiorna il contenuto dell'editor
+
+//         // Crea un oggetto da inviare, escludendo il modello
+//         const noteData = {
+//             id: note.id,
+//             name: note.name,
+//             content: note.content,
+//             language: note.language
+//         };
+
+//         // Logga l'oggetto per il debug
+//         console.log('Dati della nota da salvare:', noteData);
+
+//         // Prova a inviare al server
+//         fetch('http://localhost/notes/carica.php', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(noteData) // Usa l'oggetto senza riferimenti circolari
+        
+//         })
+//         .then(response => {
+//             if (!response.ok) {
+//                 console.warn('Server non raggiungibile, salvataggio in IndexedDB');
+//                 saveNoteToDB(note); // Salva in IndexedDB
+//             } else {
+               
+//                 return response.json();
+//             }
+//         })
+//         .then(data => {
+//             if (data && data.status === 'success') {
+//                 console.log('Nota salvata sul server:', note);
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Errore nella richiesta:', error);
+//             // Salva in IndexedDB se c'è un errore
+//             saveNoteToDB(note);
+//         });
+//         // Scelgo di salvare sempre anche in idexDB poi vedo se eliminarla 
+//         //saveNoteToDB(note);
+//     }
+// }
 function saveCurrentNote() {
     if (currentNoteId) {
         const note = notes[currentNoteId];
-        // note.content = editor.getValue(); // Aggiorna il contenuto dell'editor
+        note.content = editor.getValue(); // Aggiorna il contenuto nell'editor
 
-        // Crea un oggetto da inviare, escludendo il modello
-        const noteData = {
-            id: note.id,
-            name: note.name,
-            content: note.content,
-            language: note.language
-        };
+        // Indica che la nota necessita di sincronizzazione
+        note.needsSync = true;
 
-        // Logga l'oggetto per il debug
-        console.log('Dati della nota da salvare:', noteData);
+        // Salva la nota in IndexedDB
+        saveNoteToDB(note);
 
-        // Prova a inviare al server
-        fetch('http://localhost/notes/carica.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(noteData) // Usa l'oggetto senza riferimenti circolari
-        
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.warn('Server non raggiungibile, salvataggio in IndexedDB');
-                saveNoteToDB(note); // Salva in IndexedDB
-            } else {
-               
+        // Prova a inviarla al server (solo se online)
+        if (navigator.onLine) {
+            fetch(`${serverURL}/carica.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: note.id,
+                    name: note.name,
+                    content: note.content,
+                    language: note.language
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Errore nel salvataggio sul server');
+                }
                 return response.json();
-            }
-        })
-        .then(data => {
-            if (data && data.status === 'success') {
-                console.log('Nota salvata sul server:', note);
-            }
-        })
-        .catch(error => {
-            console.error('Errore nella richiesta:', error);
-            // Salva in IndexedDB se c'è un errore
-            saveNoteToDB(note);
-        });
-        // Scelgo di salvare sempre anche in idexDB poi vedo se eliminarla 
-        //saveNoteToDB(note);
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    console.log('Nota sincronizzata con il server:', note);
+                    note.needsSync = false; // Sincronizzazione riuscita
+                    saveNoteToDB(note); // Aggiorna IndexedDB
+                }
+            })
+            .catch(error => {
+                console.error('Errore nella sincronizzazione con il server:', error.message);
+            });
+        }
     }
 }
+async function syncModifiedNotes() {
+    const transaction = db.transaction(['notes'], 'readonly');
+    const store = transaction.objectStore('notes');
+    const request = store.getAll();
 
+    request.onsuccess = async (event) => {
+        const notesToSync = event.target.result.filter(note => note.needsSync);
+
+        for (const note of notesToSync) {
+            try {
+                const response = await fetch(`${serverURL}/carica.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: note.id,
+                        name: note.name,
+                        content: note.content,
+                        language: note.language
+                    })
+                });
+
+                if (response.ok) {
+                    console.log(`Nota sincronizzata con il server remoto: ${note.id}`);
+                    note.needsSync = false; // Aggiorna lo stato di sincronizzazione
+                    saveNoteToDB(note); // Aggiorna IndexedDB
+                } else {
+                    console.warn(`Errore nella sincronizzazione della nota ${note.id}`);
+                }
+            } catch (error) {
+                console.error(`Errore durante la sincronizzazione della nota ${note.id}: ${error.message}`);
+            }
+        }
+    };
+
+    request.onerror = (event) => {
+        console.error('Errore nel recupero delle note da sincronizzare:', event.target.error);
+    };
+}
+
+
+// function saveNoteToDB(note) {
+//     const noteData = {
+//         id: note.id,
+//         name: note.name,
+//         content: note.content,
+//         language: note.language
+//     };
+
+//     const transaction = db.transaction(['notes'], 'readwrite');
+//     const store = transaction.objectStore('notes');
+
+//     const request = store.put(noteData); 
+//     request.onsuccess = () => {
+//         console.log('Note saved in IndexedDB:', noteData);
+//     };
+//     request.onerror = (event) => {
+//         console.error('Error saving note:', event.target.error);
+//     };
+// }
 function saveNoteToDB(note) {
     const noteData = {
         id: note.id,
         name: note.name,
         content: note.content,
-        language: note.language
+        language: note.language,
+        needsSync: note.needsSync || false // Indica se necessita di sincronizzazione
     };
 
     const transaction = db.transaction(['notes'], 'readwrite');
@@ -278,10 +421,10 @@ function saveNoteToDB(note) {
 
     const request = store.put(noteData); 
     request.onsuccess = () => {
-        console.log('Note saved in IndexedDB:', noteData);
+        console.log('Nota salvata in IndexedDB:', noteData);
     };
     request.onerror = (event) => {
-        console.error('Error saving note:', event.target.error);
+        console.error('Errore nel salvataggio della nota:', event.target.error);
     };
 }
 
@@ -494,6 +637,7 @@ require(['vs/editor/editor.main'], function () {
             language: selectedLanguage,
             model: createNoteModel('', selectedLanguage) // Create an empty model with the selected language
         };
+        
         renderNotes();
         selectNote(noteId); // Automatically select the new note
     });
@@ -593,8 +737,8 @@ require(['vs/editor/editor.main'], function () {
         }
     });
     // Inizializza IndexedDB e carica note salvate
-    openDatabase();
     saveCurrentNote();
+    openDatabase();
 });
 saveCurrentNote();
 document.getElementById('save-notes-to-file').addEventListener('click', saveNotesToFile);
