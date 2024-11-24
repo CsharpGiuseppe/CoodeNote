@@ -47,6 +47,7 @@ function renderNotes() {
             selectNote(id);
         });
         notesList.appendChild(noteElement);
+        
     });
 }
 async function deleteNote(noteId) {
@@ -154,6 +155,7 @@ async function syncNotes() {
     }
 }
 async function synchronizeData() {
+    await saveCurrentNote();
     await syncDeletedNotes(); // Sincronizza le eliminazioni
     await syncNotes(); // Sincronizza modifiche e aggiunte
 }
@@ -163,6 +165,7 @@ function selectNote(noteId) {
     currentNoteId = noteId;
     const note = notes[noteId];
     editor.setModel(note.model); // Imposta il modello della nota selezionata
+   
 }
 function saveNotesToFile() {
     const notesToSave = Object.entries(notes).map(([id, note]) => ({
@@ -258,7 +261,7 @@ function saveCurrentNote() {
             saveNoteToDB(note);
         });
         // Scelgo di salvare sempre anche in idexDB poi vedo se eliminarla 
-        saveNoteToDB(note);
+        //saveNoteToDB(note);
     }
 }
 
@@ -423,6 +426,7 @@ async function loadNotes() {
         // Recupera le note da IndexedDB come fallback
         loadNotesFromDB();
     }
+    loadNotesFromDB();
 }
 
 
@@ -590,8 +594,9 @@ require(['vs/editor/editor.main'], function () {
     });
     // Inizializza IndexedDB e carica note salvate
     openDatabase();
+    saveCurrentNote();
 });
-
+saveCurrentNote();
 document.getElementById('save-notes-to-file').addEventListener('click', saveNotesToFile);
 document.getElementById('load-notes-from-file').addEventListener('change', loadNotesFromFile);
 
