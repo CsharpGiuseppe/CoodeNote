@@ -54,7 +54,45 @@
           <option value="css">CSS</option>
           <option value="note">NotePad</option>
         </select>
-
+        <!-- Pulsante per aprire il selettore di emoji -->
+        <button id="emoji-button">😊</button>
+        <div id="emoji-picker">
+            <div class="emoji-row">
+                <span class="emoji" data-emoji="😀">😀</span>
+                <span class="emoji" data-emoji="😁">😁</span>
+                <span class="emoji" data-emoji="😂">😂</span>
+                <span class="emoji" data-emoji="🥰">🥰</span>
+                <span class="emoji" data-emoji="😍">😍</span>
+                <span class="emoji" data-emoji="🤩">🤩</span>
+                <span class="emoji" data-emoji="🔒">🔒</span>
+                <span class="emoji" data-emoji="🔓">🔓</span>
+                
+            </div>
+            <div class="emoji-row">
+                <span class="emoji" data-emoji="👍">👍</span>
+                <span class="emoji" data-emoji="✋">✋</span>
+                <span class="emoji" data-emoji="🤚">🤚</span>
+                <span class="emoji" data-emoji="👋">👋</span>
+                <span class="emoji" data-emoji="🍻">🍻</span>
+                <span class="emoji" data-emoji="🐸">🐸</span>
+                <span class="emoji" data-emoji="🔥">🔥</span>
+                <span class="emoji" data-emoji="⭐">⭐</span>
+                
+            </div>
+            <div class="emoji-row">
+                <span class="emoji" data-emoji="💶">💶</span>
+                <span class="emoji" data-emoji="🕓">🕓</span>
+                <span class="emoji" data-emoji="📣">📣</span>
+                <span class="emoji" data-emoji="📧">📧</span>
+                <span class="emoji" data-emoji="💡">💡</span>
+                <span class="emoji" data-emoji="🔔">🔔</span>
+                <span class="emoji" data-emoji="🛠️">🛠️</span>
+                <span class="emoji" data-emoji="📍">📍</span>
+                
+                
+            </div>
+           
+        </div>
         <!-- Menu -->
         <div class="wrapperMenu">
           <div class="preview-controls">
@@ -72,6 +110,7 @@
             <input type="file" id="load-notes-from-file" style="display: none;" />
             <label for="load-notes-from-file" style="display: none;"><><i class="ri-git-repository-commits-line"></i> Carica Note da File</label>
           </div>
+          
           <div class="wrapperOnline">
             <p>Cloud:</p>
             <p id="online" class="onlines"></p>

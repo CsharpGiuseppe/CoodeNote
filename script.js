@@ -612,7 +612,19 @@ require(['vs/editor/editor.main'], function () {
             }, 500); 
         }
     });
-
+    document.getElementById('emoji-button').addEventListener('click', function() {
+        const picker = document.getElementById('emoji-picker');
+        picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+    });
+    
+    document.querySelectorAll('.emoji').forEach(function(emoji) {
+        emoji.addEventListener('click', function() {
+            const selectedEmoji = this.getAttribute('data-emoji');
+            // Inserisci l'emoji nel contenuto della nota
+            const editorContent = editor.getValue(); // Supponendo che 'editor' sia l'istanza di Monaco Editor
+            editor.setValue(editorContent + selectedEmoji); // Aggiungi l'emoji
+        });
+    });
     saveCurrentNote();
     // Inizializza IndexedDB e carica note salvate
     openDatabase();
