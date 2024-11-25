@@ -1,0 +1,24 @@
+# Blocca l'accesso diretto a tutti i file .css
+<FilesMatch "\.css$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Blocca l'accesso a tutti i file per default
+Order Allow,Deny
+Deny from all
+
+# Permetti l'accesso ai file CSS specifici necessari per il funzionamento del sito
+
+<Files "style.css">
+    Order Deny,Allow
+    Allow from all
+</Files>
+
+<Files "icon.css">
+    Order Deny,Allow
+    Allow from all
+</Files>
+
+
+

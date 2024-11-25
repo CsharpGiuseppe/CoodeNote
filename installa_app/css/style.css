@@ -1,0 +1,212 @@
+*{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+scroll-behavior: smooth;
+scrollbar-width: thin;
+scrollbar-color: rgb(31, 30, 30) rgb(56, 56, 56);
+}
+:root {
+  touch-action: pan-x pan-y;
+  height: 100%;
+}
+body{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  padding: 20px 5%;
+  background-color: black;
+
+}
+
+section{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.installap{
+
+  padding: 20px 0 10px 0;
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+}
+
+
+#login-btn3{
+  border: none;
+  border-radius: 6px;
+  height: 40px;
+  background-color: black;
+  color: white;
+  border: 2px rgb(255, 255, 255) solid;
+  padding: 5px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 20px;
+}
+#add-to-home-button{
+  border: none;
+  border-radius: 6px;
+  height: 40px;
+  background-color: black;
+  border: 2px rgb(255, 255, 255) solid;
+  color: white;
+  padding: 5px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 20px;
+}
+.rotate{
+max-width: 300px;
+width: 100%;
+position: relative;
+border: 1px rgb(47, 47, 47) solid;
+background-color: #000000;
+display: flex;
+flex-direction: column;
+height: 300px;
+border-radius: 10px;
+overflow: hidden;
+z-index: 1;
+}
+.rotate::before{
+position: absolute;
+content: '';
+left: -50%;
+top: -50%;
+background: linear-gradient(95deg, transparent, rgb(255, 255, 255), rgb(22, 89, 166) );
+transform-origin: bottom right;
+height: 300px;
+max-width: 300px;
+width: 100%;
+animation: rotate 7s linear infinite;
+z-index: -1;
+}
+@keyframes rotate{
+0%{
+transform: rotate(0deg);
+}
+100%{
+transform: rotate(360deg);
+}
+}
+.box{
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+inset: 2px;
+background-color: #000000;
+position: absolute;
+overflow: hidden;
+border-radius: 13px;
+z-index: -1;
+}
+.box img{
+max-width: 200px;
+  width: 100%;
+ 
+ }
+.box h1{
+  color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  text-wrap: balance;
+  text-align: center;
+}
+.box p{
+  color: white;
+  text-wrap: balance;
+  text-align: center;
+  display: none;
+  border: 1px rgb(246, 244, 244) solid;
+  padding: 10px;
+  border-radius: 6px;
+}
+.box span{
+position: absolute;
+content: '';
+width: 100%;
+height: 100%;
+left: 0;
+top:0;
+z-index: -1;
+}
+/* .box span::after{
+position: absolute;
+content: '';
+width: 100%;
+height: 100%;
+left: 0;
+top:0;
+background-image: url(../images/sfobody.jpg);
+background-position: center;
+background-size: cover;
+z-index: -1;
+filter: blur(15px);
+}
+.box span::before{
+position: absolute;
+content: '';
+width: 100%;
+height: 100%;
+left: 0;
+top:0;
+background-image: url(../images/sfobody.jpg);
+background-position: center;
+background-size: cover;
+z-index: -1;
+filter: blur(15px);
+} */
+.box form{
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 25px;
+}
+
+#error{
+color: white;
+width: 200px;
+height: 30px;
+text-align: center ;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius:10px 0 10px 0px;
+background-color: #111111;
+font-size: 12px;
+}
+
+.develop{
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+.develop img{
+width: 80px;
+}
+.develop p{
+ color: white;
+ font-family: 'Courier New', Courier, monospace;
+ font-size: 13px;
+}

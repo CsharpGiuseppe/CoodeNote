@@ -48,10 +48,10 @@ color: rgb(41, 102, 151);
 font-size: 30px;
 }
 .sidebar.active {
-  width: 200px !important;
+  width: 300px !important;
 
   background-color: #272727;
-  border-right: 1px solid #f1b50e;
+  border-right: 1px solid #c09317;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -78,7 +78,7 @@ font-size: 30px;
 .sidebar .btn {
   display: none !important;
   width: 100%;
-
+  font-size: 11px;
   background-color: #44444400;
   color: #fff;
   border: none;
@@ -111,6 +111,7 @@ font-size: 30px;
   padding: 0;
   display: block;
   user-select: none;
+
 }
 
 .sidebar li {
@@ -128,14 +129,17 @@ font-size: 30px;
 
 .sidebar li .note-name {
   flex-grow: 1;
+  font-size: 11px;
   margin-right: 10px;
+  color:#819ca8;
 }
 
 .sidebar li .delete-note {
   /* background: #ff4d4d; */
   background-color: transparent;
-  color: rgb(247, 5, 5);
+  color: rgb(5, 154, 247);
   border: none;
+  font-size: 11px!important;
   padding: 5px;
   cursor: pointer;
   font-size: 0.9em;

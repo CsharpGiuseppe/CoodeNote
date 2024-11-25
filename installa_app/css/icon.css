@@ -1,0 +1,125 @@
+.WrapperSalvaIcon {
+  position: fixed;
+  top: -1500px;
+  /* top: 0px; */
+  right: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.895);
+  width: 100%;
+  height: 100% !important;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.9s;
+  overflow: hidden;
+  z-index: 99999;
+}
+.WrapperSalvaIcon .logoMarchi {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translate(-50%);
+  width: 50px;
+}
+.WrapperSalvaIcon .logoMarchi img {
+  width: 50px;
+}
+.WrapperSalvaIcon .wrapCont {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+
+  background-color: white;
+  margin-top: 50px;
+  border-radius: 8px;
+  gap: 8px;
+  padding: 8px;
+}
+.WrapperSalvaIcon .wrapCont .wrapDescrizione {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  border: 1px rgb(31, 54, 128) solid;
+  border-radius: 8px;
+  padding: 10px;
+  gap: 10px;
+}
+.WrapperSalvaIcon .wrapCont .wrapDescrizione .Num {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
+.WrapperSalvaIcon .wrapCont .wrapDescrizione .Num span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
+  width: 30px;
+  height: 30px;
+  background-color: rgb(11, 54, 147);
+  color: white;
+  border-radius: 1000%;
+}
+
+.WrapperSalvaIcon .wrapCont .wrapDescrizione .descriz img {
+  width: 25px;
+  height: 25px;
+}
+.WrapperSalvaIcon .wrapCont .wrapDescrizione .ppp {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.WrapperSalvaIcon .wrapCont .wrapDescrizione .descriz p {
+  gap: 10px;
+  font-size: 14px;
+}
+.WrapperSalvaIcon .wrapCont .Close {
+  font-size: 14px;
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  
+}
+.WrapperSalvaIcon .wrapCont .Close button {
+  border: none;
+  font-size: 18px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+}
+.WrapperSalvaIcon .wrapCont .Close button i{
+ color: rgb(255, 0, 0);
+ font-size: 30px;
+
+}
+.WrapperSalvaIcon .arrow {
+  position: absolute;
+  bottom: 100px;
+  animation: saltella 0.5s alternate infinite;
+}
+@keyframes saltella {
+  from {
+    transform: translateY(8px);
+  }
+}
+.WrapperSalvaIcon .arrow img {
+  width: 60px;
+}
+
+@keyframes animazione {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.868);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
