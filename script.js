@@ -651,6 +651,14 @@ require(['vs/editor/editor.main'], function () {
         });
     });
 
+    //Funzione CERCA
+    document.getElementById('search-button').addEventListener('click', () => {
+        editor.focus(); // Porta il focus sull'editor
+        editor.getAction('actions.find').run(); // Attiva la finestra di ricerca
+    });
+   
+    
+
 
     saveCurrentNote();
     // Inizializza IndexedDB e carica note salvate

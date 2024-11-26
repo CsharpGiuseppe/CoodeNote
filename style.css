@@ -190,6 +190,23 @@ font-size: 30px;
   justify-content: start;
   transition: all 0.9s !important;
 }
+.lang .btnFind{
+
+  margin-right: 10px;
+}
+.lang .btnFind button{
+ padding: 5px;
+ background-color: transparent;
+ border: 1px rgb(255, 255, 255) solid;
+ color: white;
+ cursor: pointer;
+ transition: 0.3s;
+}
+.lang .btnFind button:hover{
+
+ color: rgb(196, 169, 32);
+
+}
 .database-controls{
   border: 1px rgb(234, 234, 234) solid;
   padding: 15px;
