@@ -402,33 +402,38 @@ font-size: 30px;
   color: white;
   font-size: 18px;
 }
-#emoji-button{
-  margin-right: 10px;
-  background: none;
-  background: transparent;
+#toggle-emoji-picker{
   border: none;
+  background: transparent;
+  padding: 10px;
   font-size: 18px;
-  padding: 5px;
   cursor: pointer;
 }
-#emoji-picker{
-  display: none; 
-
-  position: absolute; 
-  background-color: white; 
-  border: 1px solid #ccc; 
-
+#emoji-picker {
+  position: absolute;
+  display: flex;
+  top: 60px;
+  left: 120px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
   z-index: 1000;
-  left: 130px;
-  top: 80%;
-
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-#emoji-picker .emoji-row{
-  padding: 5px;
 
+.emoji-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
 }
-#emoji-picker .emoji-row .emoji{
-  font-size: 15px;
+
+.emoji {
   cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.2s;
+}
 
+.emoji:hover {
+  transform: scale(1.3);
 }

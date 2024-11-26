@@ -30,7 +30,7 @@
         <i class="ri-menu-add-fill"></i>
         <i class="ri-contract-left-right-fill"></i>
       </div>
-      
+
 
       <button id="new-note" class="btn"><i class="ri-file-add-line"></i> NewNote</button>
       <ul id="notes-list"></ul>
@@ -54,44 +54,41 @@
           <option value="css">CSS</option>
           <option value="note">NotePad</option>
         </select>
-        <!-- Pulsante per aprire il selettore di emoji -->
-        <button id="emoji-button">😊</button>
-        <div id="emoji-picker">
-            <div class="emoji-row">
-                <span class="emoji" data-emoji="😀">😀</span>
-                <span class="emoji" data-emoji="😁">😁</span>
-                <span class="emoji" data-emoji="😂">😂</span>
-                <span class="emoji" data-emoji="🥰">🥰</span>
-                <span class="emoji" data-emoji="😍">😍</span>
-                <span class="emoji" data-emoji="🤩">🤩</span>
-                <span class="emoji" data-emoji="🔒">🔒</span>
-                <span class="emoji" data-emoji="🔓">🔓</span>
-                
-            </div>
-            <div class="emoji-row">
-                <span class="emoji" data-emoji="👍">👍</span>
-                <span class="emoji" data-emoji="✋">✋</span>
-                <span class="emoji" data-emoji="🤚">🤚</span>
-                <span class="emoji" data-emoji="👋">👋</span>
-                <span class="emoji" data-emoji="🍻">🍻</span>
-                <span class="emoji" data-emoji="🐸">🐸</span>
-                <span class="emoji" data-emoji="🔥">🔥</span>
-                <span class="emoji" data-emoji="⭐">⭐</span>
-                
-            </div>
-            <div class="emoji-row">
-                <span class="emoji" data-emoji="💶">💶</span>
-                <span class="emoji" data-emoji="🕓">🕓</span>
-                <span class="emoji" data-emoji="📣">📣</span>
-                <span class="emoji" data-emoji="📧">📧</span>
-                <span class="emoji" data-emoji="💡">💡</span>
-                <span class="emoji" data-emoji="🔔">🔔</span>
-                <span class="emoji" data-emoji="🛠️">🛠️</span>
-                <span class="emoji" data-emoji="📍">📍</span>
-                
-                
-            </div>
-           
+        <!-- Button emoji -->
+        <button id="toggle-emoji-picker">😊</button>
+
+        <!-- Contenitore degli emoji -->
+        <div id="emoji-picker" style="display: none;">
+          <div class="emoji-row">
+            <span class="emoji" data-emoji="😀">😀</span>
+            <span class="emoji" data-emoji="😁">😁</span>
+            <span class="emoji" data-emoji="😂">😂</span>
+            <span class="emoji" data-emoji="🥰">🥰</span>
+            <span class="emoji" data-emoji="😍">😍</span>
+            <span class="emoji" data-emoji="🤩">🤩</span>
+            <span class="emoji" data-emoji="🔒">🔒</span>
+            <span class="emoji" data-emoji="🔓">🔓</span>
+          </div>
+          <div class="emoji-row">
+            <span class="emoji" data-emoji="👍">👍</span>
+            <span class="emoji" data-emoji="✋">✋</span>
+            <span class="emoji" data-emoji="🤚">🤚</span>
+            <span class="emoji" data-emoji="👋">👋</span>
+            <span class="emoji" data-emoji="🍻">🍻</span>
+            <span class="emoji" data-emoji="🐸">🐸</span>
+            <span class="emoji" data-emoji="🔥">🔥</span>
+            <span class="emoji" data-emoji="⭐">⭐</span>
+          </div>
+          <div class="emoji-row">
+            <span class="emoji" data-emoji="💶">💶</span>
+            <span class="emoji" data-emoji="🕓">🕓</span>
+            <span class="emoji" data-emoji="📣">📣</span>
+            <span class="emoji" data-emoji="📧">📧</span>
+            <span class="emoji" data-emoji="💡">💡</span>
+            <span class="emoji" data-emoji="🔔">🔔</span>
+            <span class="emoji" data-emoji="🛠️">🛠️</span>
+            <span class="emoji" data-emoji="📍">📍</span>
+          </div>
         </div>
         <!-- Menu -->
         <div class="wrapperMenu">
@@ -101,16 +98,19 @@
               <p> LivePrevie</p>
             </div>
           </div>
-          
+
           <div class="database-controls">
             <button id="export-db"><i class="ri-database-2-line"></i> Esporta Database</button>
             <button id="import-db"><i class="ri-import-line"></i> Importa Database</button>
             <input type="file" id="import-file" style="display: none;" />
-            <button id="save-notes-to-file" style="display: none;"><i class="ri-save-3-line"></i> Salva Note in File</button>
+            <button id="save-notes-to-file" style="display: none;"><i class="ri-save-3-line"></i> Salva Note in
+              File</button>
             <input type="file" id="load-notes-from-file" style="display: none;" />
-            <label for="load-notes-from-file" style="display: none;"><><i class="ri-git-repository-commits-line"></i> Carica Note da File</label>
+            <label for="load-notes-from-file" style="display: none;">
+              <><i class="ri-git-repository-commits-line"></i> Carica Note da File
+            </label>
           </div>
-          
+
           <div class="wrapperOnline">
             <p>Cloud:</p>
             <p id="online" class="onlines"></p>

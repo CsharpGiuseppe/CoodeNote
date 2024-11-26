@@ -24,7 +24,7 @@ function renderNotes() {
         noteName.contentEditable = true; // Rende il nome modificabile
         noteName.addEventListener('blur', () => {
             note.name = noteName.textContent.trim(); // Aggiorna il nome della nota
-            
+
             renderNotes();
         });
         // Pulsante Cancella
@@ -48,7 +48,7 @@ function renderNotes() {
             selectNote(id);
         });
         notesList.appendChild(noteElement);
-        
+
     });
 }
 //Elimino la nota dal database remoto se online altrimenti la elimino da locale
@@ -99,7 +99,7 @@ async function syncDeletedNotes() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ id: note.id })
-                   
+
                 });
 
                 if (response.ok) {
@@ -128,20 +128,20 @@ async function syncNotes() {
     try {
         const response = await fetch(`${serverURL}/load.php`);
         console.log('Risposta:', response);
-        
+
         if (!response.ok) {
             throw new Error('Errore nella risposta del server');
         }
 
         const remoteNotes = await response.json();
         console.log('Note Remote:', remoteNotes);
-        
+
         remoteNotes.forEach(note => {
             // Controlla se la nota esiste già in IndexedDB
             const transaction = db.transaction(['notes'], 'readonly');
             const store = transaction.objectStore('notes');
             const request = store.get(note.id);
-            
+
             request.onsuccess = () => {
                 const localNote = request.result;
                 if (localNote) {
@@ -172,7 +172,7 @@ async function syncNotes() {
                 console.error(`Errore nel controllo della nota ${note.id}:`, event.target.error);
             };
         });
-        
+
         renderNotes(); // Aggiorna l'interfaccia utente con le note
     } catch (error) {
         console.error('Errore durante la sincronizzazione delle note:', error.message);
@@ -193,7 +193,7 @@ function selectNote(noteId) {
     const note = notes[noteId];
     editor.setModel(note.model); // Imposta il modello della nota selezionata
     saveCurrentNote();
-   
+
 }
 //Salvo le note per backup nel database txt
 function saveNotesToFile() {
@@ -219,7 +219,7 @@ function saveNotesToFile() {
 function loadNotesFromFile(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
-    
+
     reader.onload = (e) => {
         const content = e.target.result;
         const loadedNotes = JSON.parse(content); // Analizza il contenuto JSON
@@ -231,16 +231,16 @@ function loadNotesFromFile(event) {
                 language: note.language,
                 model: createNoteModel(note.content, note.language) // Crea il modello per ogni nota
             };
-           // Salva la nota in IndexedDB
-           saveNoteToDB(notes[id]);
+            // Salva la nota in IndexedDB
+            saveNoteToDB(notes[id]);
         });
         renderNotes(); // Rendi visibili le note caricate
         console.log('Note caricate dal file:', 'database.txt');
-      
+
     };
 
     reader.readAsText(file);
-    
+
 }
 //Carico le note nel db remoto se offline scrivo nel dn locale
 function saveCurrentNote() {
@@ -268,22 +268,22 @@ function saveCurrentNote() {
                     language: note.language
                 })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Errore nel salvataggio sul server');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
-                    console.log('Nota sincronizzata con il server:', note);
-                    note.needsSync = false; // Sincronizzazione riuscita
-                    saveNoteToDB(note); // Aggiorna IndexedDB
-                }
-            })
-            .catch(error => {
-                console.error('Errore nella sincronizzazione con il server:', error.message);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Errore nel salvataggio sul server');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Nota sincronizzata con il server:', note);
+                        note.needsSync = false; // Sincronizzazione riuscita
+                        saveNoteToDB(note); // Aggiorna IndexedDB
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore nella sincronizzazione con il server:', error.message);
+                });
         }
     }
 }
@@ -340,7 +340,7 @@ function saveNoteToDB(note) {
     const transaction = db.transaction(['notes'], 'readwrite');
     const store = transaction.objectStore('notes');
 
-    const request = store.put(noteData); 
+    const request = store.put(noteData);
     request.onsuccess = () => {
         console.log('Nota salvata in IndexedDB:', noteData);
     };
@@ -353,7 +353,7 @@ function loadNotesFromDB() {
     const transaction = db.transaction(['notes'], 'readonly');
     const store = transaction.objectStore('notes');
     const request = store.getAll();
-    
+
     request.onsuccess = (event) => {
         const savedNotes = event.target.result;
         savedNotes.forEach((note) => {
@@ -488,6 +488,30 @@ function importDatabase(file) {
     };
     reader.readAsText(file);
 }
+// Funzione emoji
+function insertEmoji(emoji) {
+    const editorModel = editor.getModel(); // Ottieni il modello dell'editor
+    const selection = editor.getSelection(); // Ottieni la selezione corrente
+
+    // Posizione iniziale e finale del cursore
+    const startOffset = editorModel.getOffsetAt(selection.getStartPosition());
+    const endOffset = editorModel.getOffsetAt(selection.getEndPosition());
+
+    // Contenuto dell'editor prima e dopo la selezione
+    const content = editorModel.getValue();
+    const before = content.slice(0, startOffset);
+    const after = content.slice(endOffset);
+
+    // Aggiorna il contenuto con l'emoji
+    const updatedContent = before + emoji + after;
+    editorModel.setValue(updatedContent);
+
+    // Posiziona il cursore alla fine dell'emoji appena inserita
+    const newCursorOffset = startOffset + emoji.length;
+    const newCursorPosition = editorModel.getPositionAt(newCursorOffset);
+    editor.setPosition(newCursorPosition);
+}
+
 
 // Crea Monaco Editor per editing testo
 require(['vs/editor/editor.main'], function () {
@@ -506,7 +530,7 @@ require(['vs/editor/editor.main'], function () {
         const selectedLanguage = document.getElementById('language-selector').value; // Scelta linguaggio
         noteCounter++; // Incrementa contatore da assegnare alla nuova nota
         const defaultNoteName = `Code ${noteCounter}`; // Assenga il nome alla nota con numero incrmentale
-    
+
         // Crea una nuova nota
         notes[noteId] = {
             id: noteId, // Assegna un unico ID
@@ -515,7 +539,7 @@ require(['vs/editor/editor.main'], function () {
             language: selectedLanguage,
             model: createNoteModel('', selectedLanguage) // Xrea il modello in base al linguaggioscelto
         };
-        
+
         renderNotes();
         selectNote(noteId); // Vai direttamente lalla nota creata
     });
@@ -571,15 +595,15 @@ require(['vs/editor/editor.main'], function () {
         sid.classList.toggle('active');
         edit.classList.toggle('active');
     });
-  
+
     //MENU HAMBURGER
     const openMenu = document.getElementById("btn44");
     const formCon2i = document.querySelector(".wrapperMenu");
     openMenu.addEventListener("click", showForm2i);
     function showForm2i() {
-      formCon2i.classList.toggle('active');
+        formCon2i.classList.toggle('active');
     }
-   
+
     //TATO PREVIEW
     const btnPrev = document.querySelector('.prev');
     let previewr = document.querySelector('.preview');
@@ -590,7 +614,7 @@ require(['vs/editor/editor.main'], function () {
     //ESPORTA importa file per database backup
     document.getElementById('export-db').addEventListener('click', exportDatabase);
     document.getElementById('import-db').addEventListener('click', () => {
-    document.getElementById('import-file').click();
+        document.getElementById('import-file').click();
     });
 
     // Gestisci il caricamento del file
@@ -600,31 +624,34 @@ require(['vs/editor/editor.main'], function () {
             importDatabase(file);
         }
     });
-
-    let autoSaveTimeout; // variabile timer
+    // Funzione auto save ogni 500 variabile timer
+    let autoSaveTimeout; 
     editor.onDidChangeModelContent(() => {
         if (currentNoteId) {
-            notes[currentNoteId].content = editor.getValue(); 
+            notes[currentNoteId].content = editor.getValue();
             clearTimeout(autoSaveTimeout);
-           this.autoSaveTimeout = setTimeout(() => {
+            this.autoSaveTimeout = setTimeout(() => {
                 saveCurrentNote();
-                console.log('Auto-saved note:', notes[currentNoteId]); 
-            }, 500); 
+                console.log('Auto-saved note:', notes[currentNoteId]);
+            }, 1000);
         }
     });
-    document.getElementById('emoji-button').addEventListener('click', function() {
-        const picker = document.getElementById('emoji-picker');
-        picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+
+    // Mostra o nasconde il selettore di emoji
+    document.getElementById('toggle-emoji-picker').addEventListener('click', () => {
+        const emojiPicker = document.getElementById('emoji-picker');
+        emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
     });
-    
-    document.querySelectorAll('.emoji').forEach(function(emoji) {
-        emoji.addEventListener('click', function() {
-            const selectedEmoji = this.getAttribute('data-emoji');
-            // Inserisci l'emoji nel contenuto della nota
-            const editorContent = editor.getValue(); // Supponendo che 'editor' sia l'istanza di Monaco Editor
-            editor.setValue(editorContent + selectedEmoji); // Aggiungi l'emoji
+
+    // Gestisce il clic sulle emoji
+    document.querySelectorAll('.emoji').forEach(emojiElement => {
+        emojiElement.addEventListener('click', (e) => {
+            const emoji = e.target.getAttribute('data-emoji'); // Ottiene il carattere emoji
+            insertEmoji(emoji); // Inserisce l'emoji nell'editor
         });
     });
+
+
     saveCurrentNote();
     // Inizializza IndexedDB e carica note salvate
     openDatabase();
@@ -642,8 +669,8 @@ window.addEventListener('online', () => {
     // Azzero il timer
     clearTimeout(autoSaveTimeout1);
     this.autoSaveTimeout1 = setTimeout(() => {
-    console.log('Connessione ripristinata, avvio sincronizzazione...');
-    synchronizeData();
+        console.log('Connessione ripristinata, avvio sincronizzazione...');
+        synchronizeData();
     }, 7000); //Eseguo la sincronizzazione dopo 7 secondi
-    
+
 });
