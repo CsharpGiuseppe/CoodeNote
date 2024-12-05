@@ -673,12 +673,48 @@ document.getElementById('load-notes-from-file').addEventListener('change', loadN
 
 //Sincronizzo come si ripristina la connessione
 let autoSaveTimeout1; // Variable to hold the timeout for syncronized
-window.addEventListener('online', () => {
-    // Azzero il timer
-    clearTimeout(autoSaveTimeout1);
-    this.autoSaveTimeout1 = setTimeout(() => {
-        console.log('Connessione ripristinata, avvio sincronizzazione...');
-        synchronizeData();
-    }, 7000); //Eseguo la sincronizzazione dopo 7 secondi
+let retryTimeout;
+let retryCount = 0;
+const MAX_RETRIES = 5; // Numero massimo di tentativi
+async function synchronizeWithRetry() {
+    if (retryCount >= MAX_RETRIES) {
+        console.error('Raggiunto il numero massimo di tentativi di sincronizzazione.');
+        return;
+    }
 
+    const serverReachable = await isServerReachable();
+    if (serverReachable) {
+        console.log('Connessione al server confermata, avvio sincronizzazione...');
+        synchronizeData();
+        retryCount = 0; // Resetta i tentativi in caso di successo
+    } else {
+        console.warn(`Tentativo di sincronizzazione fallito. Riprovo tra 5 secondi... (${retryCount + 1}/${MAX_RETRIES})`);
+        retryCount++;
+        retryTimeout = setTimeout(synchronizeWithRetry, 5000); // Riprova tra 5 secondi
+    }
+}
+
+window.addEventListener('online', () => {
+    clearTimeout(autoSaveTimeout1);
+    clearTimeout(retryTimeout);
+    retryCount = 0; // Resetta i tentativi all'evento online
+    this.autoSaveTimeout1 = setTimeout(synchronizeWithRetry, 7000); // Avvia con ritardo iniziale
 });
+
+async function isServerReachable() {
+    try {
+        const response = await fetch(`${serverURL}/load.php`, { method: 'HEAD' });
+        return response.ok;
+    } catch (error) {
+        return false;
+    }
+}
+// window.addEventListener('online', () => {
+//     // Azzero il timer
+//     clearTimeout(autoSaveTimeout1);
+//     this.autoSaveTimeout1 = setTimeout(() => {
+//         console.log('Connessione ripristinata, avvio sincronizzazione...');
+//         synchronizeData();
+//     }, 7000); //Eseguo la sincronizzazione dopo 7 secondi
+
+// });
