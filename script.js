@@ -291,6 +291,7 @@ function saveNoteToDB(note) {
         name: note.name,
         content: note.content,
         language: note.language,
+        highlights: note.highlights || [],
         needsSync: note.needsSync || true // Indica se necessita di sincronizzazione
     };
     const transaction = db.transaction(['notes'], 'readwrite');
