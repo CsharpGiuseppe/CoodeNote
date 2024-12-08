@@ -630,6 +630,7 @@ require(['vs/editor/editor.main'], function () {
             const note = notes[currentNoteId];
             note.language = language; // Aggiorna il linguaggio della nota
             monaco.editor.setModelLanguage(note.model, language); // Cambia il linguaggio del modello
+            saveCurrentNote();
         } else {
             // Se nessuna nota è selezionata, cambia solo l'editor
             monaco.editor.setModelLanguage(editor.getModel(), language);
