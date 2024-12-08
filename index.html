@@ -1,45 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="author" content="CodeNote ETHERIA" />
-    <meta name="description" content="CodeNote ETHERIA" />
-    <meta name="copyright" content="CodeNote ETHERIA" />
-    <meta http-equiv="keywords" content="CodeNote ETHERIA" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="dc.language" content="ita" scheme="RFC1766" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no"
-    />
-    <meta
-      http-equiv="Cache-Control"
-      content="no-store, no-cache, must-revalidate"
-    />
-    <meta
-      http-equiv="Cache-Control"
-      content="post-check=0, pre-check=0"
-      false
-    />
-    <title>CodeNote-ETHERIA</title>
-    <link rel="stylesheet" href="style.css" />
-    <!-- Monaco Editor CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css"
-    />
-  </head>
 
-  <body>
-    <div class="app">
-      <div class="hamburger"></div>
-      <!-- Sidebar -->
-      <div class="sidebar">
-        <div class="opeMenus">
-          <i class="ri-menu-add-fill"></i>
-          <i class="ri-contract-left-right-fill"></i>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="author" content="CodeNote ETHERIA" />
+  <meta name="description" content="CodeNote ETHERIA" />
+  <meta name="copyright" content="CodeNote ETHERIA" />
+  <meta http-equiv="keywords" content="CodeNote ETHERIA" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="dc.language" content="ita" scheme="RFC1766" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+  <meta http-equiv="Cache-Control" content="post-check=0, pre-check=0" false />
+  <title>CodeNote-ETHERIA</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Monaco Editor CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" />
+</head>
+
+<body>
+  <div class="app">
+    <div class="hamburger"></div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="opeMenus">
+        <i class="ri-menu-add-fill"></i>
+        <i class="ri-contract-left-right-fill"></i>
+      </div>
 
 
       <button id="new-note" class="btn"><i class="ri-file-add-line"></i> NewNote</button>
@@ -54,7 +42,7 @@
       <div class="lang">
 
 
-        <p>Select Language</p>
+        <p>Language</p>
         <select id="language-selector">
           <option value="html">HTML</option>
           <option value="php">PHP</option>
@@ -64,8 +52,18 @@
           <option value="css">CSS</option>
           <option value="note">NotePad</option>
         </select>
-        <!-- Button emoji -->
-        <button id="toggle-emoji-picker">😊</button>
+
+        <div class="evidenzi">
+          <button id="highlight-button">Evidenzia</button>
+
+          <button id="remove-highlight-button">Rimuovi</button>
+
+        </div>
+
+        <!-- Menu -->
+        <div class="wrapperMenu">
+          <!-- Button emoji -->
+          <button id="toggle-emoji-picker">😊</button>
 
           <!-- Contenitore degli emoji -->
           <div id="emoji-picker" style="display: none">
@@ -106,61 +104,55 @@
               <i class="ri-search-line"></i> Cerca
             </button>
           </div>
-
-          <!-- Menu -->
-          <div class="wrapperMenu">
-            <div class="preview-controls">
-              <button id="open-in-new-tab">
-                <i class="ri-eye-line"></i> LivePrevieW NewTab
-              </button>
-              <div class="prev">
-                <i class="ri-eye-line"></i>
-                <p>LivePrevie</p>
-              </div>
-            </div>
-
-            <div class="database-controls">
-              <button id="export-db">
-                <i class="ri-database-2-line"></i> Esporta Database
-              </button>
-              <button id="import-db">
-                <i class="ri-import-line"></i> Importa Database
-              </button>
-              <input type="file" id="import-file" style="display: none" />
-              <button id="save-notes-to-file" style="display: none">
-                <i class="ri-save-3-line"></i> Salva Note in File
-              </button>
-              <input
-                type="file"
-                id="load-notes-from-file"
-                style="display: none"
-              />
-              <label for="load-notes-from-file" style="display: none">
-                <i class="ri-git-repository-commits-line"></i> Carica Note da
-                File
-              </label>
-            </div>
-
-            <div class="wrapperOnline">
-              <p>Cloud:</p>
-              <p id="online" class="onlines"></p>
+          <div class="preview-controls">
+            <button id="open-in-new-tab">
+              <i class="ri-eye-line"></i> LivePrevieW NewTab
+            </button>
+            <div class="prev">
+              <i class="ri-eye-line"></i>
+              <p>LivePrevie</p>
             </div>
           </div>
 
-          <!-- Hamburger menu -->
-          <div class="hamburg">
-            <i class="ri-menu-fill" id="btn44"></i>
+          <div class="database-controls">
+            <button id="export-db">
+              <i class="ri-database-2-line"></i> Esporta Database
+            </button>
+            <button id="import-db">
+              <i class="ri-import-line"></i> Importa Database
+            </button>
+            <input type="file" id="import-file" style="display: none" />
+            <button id="save-notes-to-file" style="display: none">
+              <i class="ri-save-3-line"></i> Salva Note in File
+            </button>
+            <input type="file" id="load-notes-from-file" style="display: none" />
+            <label for="load-notes-from-file" style="display: none">
+              <i class="ri-git-repository-commits-line"></i> Carica Note da
+              File
+            </label>
+          </div>
+
+          <div class="wrapperOnline">
+            <p>Cloud:</p>
+            <p id="online" class="onlines"></p>
           </div>
         </div>
 
-        <div class="wrapCont" id="editor-container"></div>
-        <div class="preview">
-          <p>Live Preview</p>
-          <iframe id="preview-frame"></iframe>
+        <!-- Hamburger menu -->
+        <div class="hamburg">
+          <i class="ri-menu-fill" id="btn44"></i>
         </div>
       </div>
-    </div>
 
-    <script src="script.js"></script>
-  </body>
+      <div class="wrapCont" id="editor-container"></div>
+      <div class="preview">
+        <p>Live Preview</p>
+        <iframe id="preview-frame"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
 </html>

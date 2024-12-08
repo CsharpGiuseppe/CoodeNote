@@ -2,8 +2,8 @@
   "short_name": "CodeNote",
   "name": "CodeNote CoderC",
   "display": "standalone",
-  "start_url": "/codenote/?source=pwa",
-  "id": "/codenote/?source=pwa",
+  "start_url": "/notes/?source=pwa",
+  "id": "/notes/?source=pwa",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
