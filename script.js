@@ -472,7 +472,7 @@ function insertEmoji(emoji) {
 }
 
 let decorations = {}; // Per salvare i decoratori associati alle note
-
+//funzione oggi
 // Funzione per evidenziare il testo selezionato
 document.getElementById('highlight-button').addEventListener('click', () => {
     if (!currentNoteId) return;
@@ -483,15 +483,15 @@ document.getElementById('highlight-button').addEventListener('click', () => {
 
     if (startOffset === endOffset) return; // Nessuna selezione
 
-    // Aggiungi l'intervallo agli evidenziatori della nota corrente
     const note = notes[currentNoteId];
     note.highlights = note.highlights || [];
     note.highlights.push({ start: startOffset, end: endOffset });
 
-    // Aggiorna i decoratori
-    applyHighlights(note);
-    saveCurrentNote();
+    applyHighlights(note); // Applica gli evidenziatori
+    saveCurrentNote(); // Salva la nota aggiornata
 });
+
+
 // Rimuovi la
 document.getElementById('remove-highlight-button').addEventListener('click', () => {
     if (!currentNoteId) return;
@@ -517,6 +517,32 @@ document.getElementById('remove-highlight-button').addEventListener('click', () 
 
 
 // Applica i decoratori per una nota
+// function applyHighlights(note) {
+//     if (!note.highlights) return;
+
+//     // Rimuovi eventuali decoratori precedenti
+//     if (decorations[note.id]) {
+//         editor.deltaDecorations(decorations[note.id], []);
+//     }
+
+//     // Crea nuovi decoratori basati sugli intervalli salvati
+//     const newDecorations = note.highlights.map(range => ({
+//         range: new monaco.Range(
+//             editor.getModel().getPositionAt(range.start).lineNumber,
+//             editor.getModel().getPositionAt(range.start).column,
+//             editor.getModel().getPositionAt(range.end).lineNumber,
+//             editor.getModel().getPositionAt(range.end).column
+//         ),
+//         options: {
+//             inlineClassName: 'highlight-red' // Classe CSS per evidenziare
+//         }
+//     }));
+
+//     // Applica i decoratori
+//     decorations[note.id] = editor.deltaDecorations([], newDecorations);
+// }
+//nuova funzione oggi
+// Applica gli evidenziatori
 function applyHighlights(note) {
     if (!note.highlights) return;
 
@@ -525,7 +551,7 @@ function applyHighlights(note) {
         editor.deltaDecorations(decorations[note.id], []);
     }
 
-    // Crea nuovi decoratori basati sugli intervalli salvati
+    // Crea nuovi decoratori
     const newDecorations = note.highlights.map(range => ({
         range: new monaco.Range(
             editor.getModel().getPositionAt(range.start).lineNumber,
@@ -534,13 +560,14 @@ function applyHighlights(note) {
             editor.getModel().getPositionAt(range.end).column
         ),
         options: {
-            inlineClassName: 'highlight-red' // Classe CSS per evidenziare
+            inlineClassName: 'highlight-red' // Stile CSS
         }
     }));
 
-    // Applica i decoratori
+    // Applica i nuovi decoratori
     decorations[note.id] = editor.deltaDecorations([], newDecorations);
 }
+
 
 
 
@@ -639,20 +666,53 @@ require(['vs/editor/editor.main'], function () {
             monaco.editor.setModelLanguage(editor.getModel(), language);
         }
     });
+//oggi
+let autoSaveTimeout; 
+editor.onDidChangeModelContent(() => {
+    if (currentNoteId) {
+        const note = notes[currentNoteId];
 
-    //Visualizza e crea l'anteprima nell'iframe solo se HTML
-    editor.onDidChangeModelContent(() => {
-        if (currentNoteId) {
-            notes[currentNoteId].content = editor.getValue();
+        // Aggiorna i range degli evidenziatori
+        if (decorations[note.id]) {
+            decorations[note.id].forEach((decorationId, index) => {
+                const decorationRange = editor.getModel().getDecorationRange(decorationId);
+                if (decorationRange) {
+                    const startOffset = editor.getModel().getOffsetAt(decorationRange.getStartPosition());
+                    const endOffset = editor.getModel().getOffsetAt(decorationRange.getEndPosition());
+                    note.highlights[index] = { start: startOffset, end: endOffset };
+                }
+            });
         }
-        // Anteprima live solo per HTML
-        const language = notes[currentNoteId]?.language || 'html';
+        saveCurrentNote();
+        // Salva automaticamente
+        clearTimeout(autoSaveTimeout);
+        autoSaveTimeout = setTimeout(() => {
+            saveCurrentNote();
+            console.log('Auto-saved note:', notes[currentNoteId]);
+        }, 500);
+
+        // Anteprima live per HTML
+        const language = note.language || 'html';
         if (language === 'html') {
             const iframe = document.getElementById('preview-frame');
-            const htmlContent = editor.getValue();
-            iframe.srcdoc = htmlContent; // Aggiorna il contenuto dell'iframe
+            iframe.srcdoc = editor.getValue();
         }
-    });
+    }
+});
+
+    //Visualizza e crea l'anteprima nell'iframe solo se HTML
+    // editor.onDidChangeModelContent(() => {
+    //     if (currentNoteId) {
+    //         notes[currentNoteId].content = editor.getValue();
+    //     }
+    //     // Anteprima live solo per HTML
+    //     const language = notes[currentNoteId]?.language || 'html';
+    //     if (language === 'html') {
+    //         const iframe = document.getElementById('preview-frame');
+    //         const htmlContent = editor.getValue();
+    //         iframe.srcdoc = htmlContent; // Aggiorna il contenuto dell'iframe
+    //     }
+    // });
 
     //Apri anteprima del codice solo se HTML nel Browser
     document.getElementById('open-in-new-tab').addEventListener('click', () => {
@@ -707,18 +767,20 @@ require(['vs/editor/editor.main'], function () {
             importDatabase(file);
         }
     });
-    // Funzione auto save ogni 500 variabile timer
-    let autoSaveTimeout; 
-    editor.onDidChangeModelContent(() => {
-        if (currentNoteId) {
-            notes[currentNoteId].content = editor.getValue();
-            clearTimeout(autoSaveTimeout);
-            this.autoSaveTimeout = setTimeout(() => {
-                saveCurrentNote();
-                console.log('Auto-saved note:', notes[currentNoteId]);
-            }, 1000);
-        }
-    });
+  
+    
+    // Funzione auto save ogni 500 variabile timer oggi
+    // let autoSaveTimeout; 
+    // editor.onDidChangeModelContent(() => {
+    //     if (currentNoteId) {
+    //         notes[currentNoteId].content = editor.getValue();
+    //         clearTimeout(autoSaveTimeout);
+    //         this.autoSaveTimeout = setTimeout(() => {
+    //             saveCurrentNote();
+    //             console.log('Auto-saved note:', notes[currentNoteId]);
+    //         }, 1000);
+    //     }
+    // });
 
     // Mostra o nasconde il selettore di emoji
     document.getElementById('toggle-emoji-picker').addEventListener('click', () => {
@@ -801,3 +863,4 @@ async function isServerReachable() {
 //     }, 7000); //Eseguo la sincronizzazione dopo 7 secondi
 
 // });
+
