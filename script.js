@@ -24,7 +24,7 @@ function renderNotes() {
         noteName.contentEditable = true; // Rende il nome modificabile
         noteName.addEventListener('blur', () => {
             note.name = noteName.textContent.trim(); // Aggiorna il nome della nota
-
+            saveCurrentNote();
             renderNotes();
         });
         // Pulsante Cancella
@@ -147,6 +147,7 @@ async function syncNotes() {
                 if (localNote) {
                     // Se la nota esiste, puoi scegliere di aggiornarla o saltarla
                     console.log(`Nota con ID ${note.id} già esistente in IndexedDB.`);
+                    note.needsSync = false
                 } else {
                     // Se la nota non esiste, salvala in IndexedDB
                     saveNoteToDB({
@@ -154,7 +155,7 @@ async function syncNotes() {
                         name: note.name,
                         content: note.content,
                         language: note.language,
-                        needsSync: false // Non necessita di sincronizzazione poiché proviene dal server
+                        needsSync:  note.needsSync = false // Non necessita di sincronizzazione poiché proviene dal server
                     });
                     // Aggiorna l'oggetto locale delle note
                     notes[note.id] = {
@@ -163,7 +164,7 @@ async function syncNotes() {
                         content: note.content,
                         language: note.language,
                         model: createNoteModel(note.content, note.language), // Crea il modello per l'editor Monaco
-                        needsSync: false
+                        needsSync:  note.needsSync = false
                     };
                     console.log(`Nota aggiunta da remoto: ${note.id}`);
                 }
@@ -269,7 +270,7 @@ async function syncModifiedNotes() {
                 if (response.ok) {
                     console.log(`Note synchronized with remote server: ${note.id}`);
                     note.needsSync = false; // Update sync status to false
-                    saveNoteToDB(note);(note); // Update IndexedDB with the new note state
+                    saveNoteToDB(note); // Update IndexedDB with the new note state
                 } else {
                     console.warn(`Error synchronizing note ${note.id}`);
                 }
@@ -292,7 +293,8 @@ function saveNoteToDB(note) {
         content: note.content,
         language: note.language,
         highlights: note.highlights || [],
-        needsSync: note.needsSync || true // Indica se necessita di sincronizzazione
+        // needsSync: note.needsSync || true // Indica se necessita di sincronizzazione
+        needsSync: typeof note.needsSync === 'boolean' ? note.needsSync : false // Default a true se non è definito
     };
     const transaction = db.transaction(['notes'], 'readwrite');
     const store = transaction.objectStore('notes');
@@ -555,7 +557,8 @@ function saveCurrentNote() {
             name: note.name,
             content: note.content,
             language: note.language,
-            highlights: note.highlights || [] // Include only necessary properties
+            highlights: note.highlights || [], // Include only necessary properties
+            needsSync: note.needsSync
         };
 
         // Save to IndexedDB
