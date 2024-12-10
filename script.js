@@ -159,7 +159,7 @@ async function syncNotes() {
                         name: note.name,
                         content: note.content,
                         language: note.language,
-                        needsSync:  note.needsSync = false // Non necessita di sincronizzazione poiché proviene dal server
+                        needsSync: note.needsSync = false // Non necessita di sincronizzazione poiché proviene dal server
                     });
                     // Aggiorna l'oggetto locale delle note
                     notes[note.id] = {
@@ -168,7 +168,7 @@ async function syncNotes() {
                         content: note.content,
                         language: note.language,
                         model: createNoteModel(note.content, note.language), // Crea il modello per l'editor Monaco
-                        needsSync:  note.needsSync = false
+                        needsSync: note.needsSync = false
                     };
                     console.log(`Nota aggiunta da remoto: ${note.id}`);
                 }
@@ -260,11 +260,11 @@ async function syncModifiedNotes() {
     const transaction = db.transaction(['notes'], 'readonly');
     const store = transaction.objectStore('notes');
     const request = store.getAll();
-    
+
     request.onsuccess = async (event) => {
         const notesToSync = event.target.result.filter(note => note.needsSync); // Filter notes needing sync
         console.log(`Notes to sync: ${notesToSync.length}`); // Log the number of notes to sync
-        
+
         for (const note of notesToSync) {
             try {
                 const response = await fetch(`${serverURL}/carica.php`, {
@@ -274,7 +274,7 @@ async function syncModifiedNotes() {
                     },
                     body: JSON.stringify(note) // Send the note needing sync
                 });
-                
+
                 if (response.ok) {
                     console.log(`Note synchronized with remote server: ${note.id}`);
                     note.needsSync = false; // Update sync status to false
@@ -287,7 +287,7 @@ async function syncModifiedNotes() {
             }
         }
     };
-    
+
     request.onerror = (event) => {
         console.error('Error retrieving notes to sync:', event.target.error);
     };
@@ -587,25 +587,25 @@ function saveCurrentNote() {
                 },
                 body: JSON.stringify(noteToSave) // Use the clean note
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error saving to server');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
-                    console.log('Note synchronized with server:', noteToSave);
-                    console.log("ON-LINE");
-                    onlineOffline("ON");
-                    note.needsSync = false; // Synchronization successful
-                    saveNoteToDB(noteToSave); // Update IndexedDB
-                }
-            })
-            .catch(error => {
-                console.error('Error synchronizing with server:', error.message);
-            });
-        }else{
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error saving to server');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Note synchronized with server:', noteToSave);
+                        console.log("ON-LINE");
+                        onlineOffline("ON");
+                        note.needsSync = false; // Synchronization successful
+                        saveNoteToDB(noteToSave); // Update IndexedDB
+                    }
+                })
+                .catch(error => {
+                    console.error('Error synchronizing with server:', error.message);
+                });
+        } else {
             console.log("OFF-LINE");
             onlineOffline("OFF");
         }
@@ -616,13 +616,37 @@ function saveCurrentNote() {
 require(['vs/editor/editor.main'], function () {
 
     //Crea Monaco Editor per editing testo
+    let minimapEnabled = false;
     editor = monaco.editor.create(document.getElementById('editor-container'), {
         value: '',
         language: 'html', // Imposta un linguaggio di default
         theme: 'vs-dark', // Tema scuro
-        automaticLayout: true
+        automaticLayout: true,
+        minimap: {
+            enabled: minimapEnabled  // button minimap
+        }
     });
+    // // Toggle minimap
+    // document.getElementById('toggle-minimap').addEventListener('click', () => {
+    //     minimapEnabled = !minimapEnabled; // Toggle state
+    //     editor.updateOptions({ minimap: { enabled: minimapEnabled } }); // Update editor options
+    // });
+    // Funzione per attivare/disattivare la minimappa
+    function toggleMinimap() {
+        minimapEnabled = !minimapEnabled; // Cambia stato
+        editor.updateOptions({ minimap: { enabled: minimapEnabled } }); // Aggiorna le opzioni dell'editor
+    }
 
+    // Aggiungi evento per il pulsante
+    document.getElementById('toggle-minimap').addEventListener('click', toggleMinimap);
+
+    // Aggiungi evento per la combinazione di tasti Ctrl + M
+    document.addEventListener('keydown', (event) => {
+        if (event.ctrlKey && event.key === 'm') { // Verifica se Ctrl + M è premuto
+            event.preventDefault(); // Previene l'azione predefinita
+            toggleMinimap(); // Chiama la funzione per attivare/disattivare la minimappa
+        }
+    });
     //Creazione Nota
     document.getElementById('new-note').addEventListener('click', () => {
         const noteId = Date.now().toString(); // Genera un ID unico per la nota
@@ -656,53 +680,39 @@ require(['vs/editor/editor.main'], function () {
             monaco.editor.setModelLanguage(editor.getModel(), language);
         }
     });
-//oggi
-let autoSaveTimeout; 
-editor.onDidChangeModelContent(() => {
-    if (currentNoteId) {
-        const note = notes[currentNoteId];
+    //oggi
+    let autoSaveTimeout;
+    editor.onDidChangeModelContent(() => {
+        if (currentNoteId) {
+            const note = notes[currentNoteId];
 
-        // Aggiorna i range degli evidenziatori
-        if (decorations[note.id]) {
-            decorations[note.id].forEach((decorationId, index) => {
-                const decorationRange = editor.getModel().getDecorationRange(decorationId);
-                if (decorationRange) {
-                    const startOffset = editor.getModel().getOffsetAt(decorationRange.getStartPosition());
-                    const endOffset = editor.getModel().getOffsetAt(decorationRange.getEndPosition());
-                    note.highlights[index] = { start: startOffset, end: endOffset };
-                }
-            });
-        }
-        saveCurrentNote();
-        // Salva automaticamente
-        clearTimeout(autoSaveTimeout);
-        autoSaveTimeout = setTimeout(() => {
+            // Aggiorna i range degli evidenziatori
+            if (decorations[note.id]) {
+                decorations[note.id].forEach((decorationId, index) => {
+                    const decorationRange = editor.getModel().getDecorationRange(decorationId);
+                    if (decorationRange) {
+                        const startOffset = editor.getModel().getOffsetAt(decorationRange.getStartPosition());
+                        const endOffset = editor.getModel().getOffsetAt(decorationRange.getEndPosition());
+                        note.highlights[index] = { start: startOffset, end: endOffset };
+                    }
+                });
+            }
             saveCurrentNote();
-            console.log('Auto-saved note:', notes[currentNoteId]);
-        }, 500);
+            // Salva automaticamente
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(() => {
+                saveCurrentNote();
+                console.log('Auto-saved note:', notes[currentNoteId]);
+            }, 500);
 
-        // Anteprima live per HTML
-        const language = note.language || 'html';
-        if (language === 'html') {
-            const iframe = document.getElementById('preview-frame');
-            iframe.srcdoc = editor.getValue();
+            // Anteprima live per HTML
+            const language = note.language || 'html';
+            if (language === 'html') {
+                const iframe = document.getElementById('preview-frame');
+                iframe.srcdoc = editor.getValue();
+            }
         }
-    }
-});
-
-    //Visualizza e crea l'anteprima nell'iframe solo se HTML
-    // editor.onDidChangeModelContent(() => {
-    //     if (currentNoteId) {
-    //         notes[currentNoteId].content = editor.getValue();
-    //     }
-    //     // Anteprima live solo per HTML
-    //     const language = notes[currentNoteId]?.language || 'html';
-    //     if (language === 'html') {
-    //         const iframe = document.getElementById('preview-frame');
-    //         const htmlContent = editor.getValue();
-    //         iframe.srcdoc = htmlContent; // Aggiorna il contenuto dell'iframe
-    //     }
-    // });
+    });
 
     //Apri anteprima del codice solo se HTML nel Browser
     document.getElementById('open-in-new-tab').addEventListener('click', () => {
@@ -757,8 +767,8 @@ editor.onDidChangeModelContent(() => {
             importDatabase(file);
         }
     });
-  
-    
+
+
     // Funzione auto save ogni 500 variabile timer oggi
     // let autoSaveTimeout; 
     // editor.onDidChangeModelContent(() => {
@@ -791,8 +801,8 @@ editor.onDidChangeModelContent(() => {
         editor.focus(); // Porta il focus sull'editor
         editor.getAction('actions.find').run(); // Attiva la finestra di ricerca
     });
-   
-    
+
+
 
 
     saveCurrentNote();
@@ -823,7 +833,7 @@ async function synchronizeWithRetry() {
     if (serverReachable) {
         console.log('Connessione al server confermata, avvio sincronizzazione...');
         synchronizeData();
-    
+
         retryCount = 0; // Resetta i tentativi in caso di successo
     } else {
         console.warn(`Tentativo di sincronizzazione fallito. Riprovo tra 5 secondi... (${retryCount + 1}/${MAX_RETRIES})`);
@@ -854,7 +864,7 @@ async function isServerReachable() {
 // Apri menu laterale utiliti
 const btnutil = document.querySelector('.util');
 let menuutili = document.querySelector('.utiliti');
-btnutil.addEventListener('click', () =>{
+btnutil.addEventListener('click', () => {
 
     menuutili.classList.toggle('active');
 
@@ -862,17 +872,15 @@ btnutil.addEventListener('click', () =>{
 
 const cloud = document.querySelector('.onlines');
 const cloudOn = document.querySelector('.ont');
-function onlineOffline(condizione){
-    if(condizione === "ON")
-    {
-        cloud.innerHTML='<i class="ri-cloud-line"></i>';
+function onlineOffline(condizione) {
+    if (condizione === "ON") {
+        cloud.innerHTML = '<i class="ri-cloud-line"></i>';
         cloudOn.innerHTML = '<p style=" color: green;"> on-line</p>';
 
     }
-    else
-    {
+    else {
 
-        cloud.innerHTML='<i class="ri-cloud-off-line"></i>';
+        cloud.innerHTML = '<i class="ri-cloud-off-line"></i>';
         cloudOn.innerHTML = '<p style=" color: red;"> off-line</p>';
 
     }
