@@ -51,6 +51,7 @@ function renderNotes() {
 
     });
 }
+
 //Elimino la nota dal database remoto se online altrimenti la elimino da locale
 async function deleteNote(noteId) {
     deleteNoteFromDB(noteId); // Elimina la nota da IndexedDB
@@ -82,6 +83,7 @@ async function deleteNote(noteId) {
     delete notes[noteId];
     renderNotes(); // Aggiorna l'interfaccia utente
 }
+
 //Sincronizzo le note eliminate da offline come ripristino la connessione
 async function syncDeletedNotes() {
     const transaction = db.transaction(['deletedNotes'], 'readonly');
@@ -115,6 +117,7 @@ async function syncDeletedNotes() {
         }
     };
 }
+
 //Elimino note dal database
 function removeDeletedNoteFromDB(noteId) {
     const transaction = db.transaction(['deletedNotes'], 'readwrite');
@@ -123,6 +126,7 @@ function removeDeletedNoteFromDB(noteId) {
     store.delete(noteId);
     console.log('Nota rimossa dal registro delle eliminazioni:', noteId);
 }
+
 //Sincronizzo le note da ripristino connessione
 async function syncNotes() {
     try {
@@ -181,6 +185,7 @@ async function syncNotes() {
         loadNotesFromDB(); // Ripiega su caricamento delle note da IndexedDB
     }
 }
+
 //Sincronizzazione come rientra la connessione attenddo 8 secondi 
 async function synchronizeData() {
     console.log('Inizio sincronizzazione...');
@@ -189,6 +194,7 @@ async function synchronizeData() {
     await syncNotes(); // Aggiorna le note dal server remoto
     console.log('Sincronizzazione completata con il server remoto');
 }
+
 // Seleziona una nota
 // Al caricamento di una nota, applica gli evidenziatori
 // Selezione di una nota (ripristina gli evidenziatori)
@@ -198,6 +204,7 @@ function selectNote(noteId) {
     editor.setModel(note.model); // Imposta il modello della nota
     applyHighlights(note); // Applica gli evidenziatori
 }
+
 //Salvo le note per backup nel database txt
 function saveNotesToFile() {
     const notesToSave = Object.entries(notes).map(([id, note]) => ({
@@ -218,6 +225,7 @@ function saveNotesToFile() {
     URL.revokeObjectURL(url); // Pulisci l'oggetto URL
     console.log('Note salvate nel file:', 'database.txt');
 }
+
 //LOAD note dal databse txt manulae
 function loadNotesFromFile(event) {
     const file = event.target.files[0];
@@ -245,8 +253,8 @@ function loadNotesFromFile(event) {
     reader.readAsText(file);
 
 }
-//Carico le note nel db remoto se offline scrivo nel dn locale
 
+//Carico le note nel db remoto se offline scrivo nel dn locale
 //Sincronizzo le note se sono offline e passo online
 async function syncModifiedNotes() {
     const transaction = db.transaction(['notes'], 'readonly');
@@ -307,6 +315,7 @@ function saveNoteToDB(note) {
         console.error('Errore nel salvataggio della nota:', event.target.error);
     };
 }
+
 // Carica tutte le note da IndexedDB
 function loadNotesFromDB() {
     const transaction = db.transaction(['notes'], 'readonly');
@@ -341,6 +350,7 @@ function deleteNoteFromDB(noteId) {
     store.delete(noteId);
     console.log('Nota eliminata da IndexedDB:', noteId);
 }
+
 //Apri il database e creo la sincronizzazione per note da eliminare
 function openDatabase() {
     const request = indexedDB.open('NotesAppDB', 1);
@@ -369,6 +379,7 @@ function openDatabase() {
         console.error('Errore nell\'apertura del database:', event.target.errorCode);
     };
 }
+
 //Segno la nota da eliminare se sono offline
 function markNoteAsDeleted(noteId) {
     const transaction = db.transaction(['deletedNotes'], 'readwrite');
@@ -382,6 +393,7 @@ function markNoteAsDeleted(noteId) {
         console.error('Errore nel registrare l\'eliminazione:', event.target.error);
     };
 }
+
 // LOAD NOTE dal SERVER remoto e dal db locale
 function loadNotes() {
     fetch(`${serverURL}/load.php`)
@@ -432,6 +444,7 @@ function exportDatabase() {
         console.error('Errore nell\'esportazione del database:', event.target.errorCode);
     };
 }
+
 // Funzione per importare il database JSON
 function importDatabase(file) {
     const reader = new FileReader();
@@ -451,6 +464,7 @@ function importDatabase(file) {
     };
     reader.readAsText(file);
 }
+
 // Funzione emoji
 function insertEmoji(emoji) {
     const editorModel = editor.getModel(); // Ottieni il modello dell'editor
@@ -495,7 +509,6 @@ document.getElementById('highlight-button').addEventListener('click', () => {
     saveCurrentNote(); // Salva la nota aggiornata
 });
 
-
 // Rimuovi la
 document.getElementById('remove-highlight-button').addEventListener('click', () => {
     if (!currentNoteId) return;
@@ -519,33 +532,6 @@ document.getElementById('remove-highlight-button').addEventListener('click', () 
     }
 });
 
-
-// Applica i decoratori per una nota
-// function applyHighlights(note) {
-//     if (!note.highlights) return;
-
-//     // Rimuovi eventuali decoratori precedenti
-//     if (decorations[note.id]) {
-//         editor.deltaDecorations(decorations[note.id], []);
-//     }
-
-//     // Crea nuovi decoratori basati sugli intervalli salvati
-//     const newDecorations = note.highlights.map(range => ({
-//         range: new monaco.Range(
-//             editor.getModel().getPositionAt(range.start).lineNumber,
-//             editor.getModel().getPositionAt(range.start).column,
-//             editor.getModel().getPositionAt(range.end).lineNumber,
-//             editor.getModel().getPositionAt(range.end).column
-//         ),
-//         options: {
-//             inlineClassName: 'highlight-red' // Classe CSS per evidenziare
-//         }
-//     }));
-
-//     // Applica i decoratori
-//     decorations[note.id] = editor.deltaDecorations([], newDecorations);
-// }
-//nuova funzione oggi
 // Applica gli evidenziatori
 function applyHighlights(note) {
     if (!note.highlights) return;
@@ -625,8 +611,6 @@ function saveCurrentNote() {
         }
     }
 }
-
-
 
 // Crea Monaco Editor per editing testo
 require(['vs/editor/editor.main'], function () {
@@ -815,6 +799,7 @@ editor.onDidChangeModelContent(() => {
     // Inizializza IndexedDB e carica note salvate
     openDatabase();
 });
+
 //Salva le note finito il ciclo
 saveCurrentNote();
 
@@ -874,6 +859,7 @@ btnutil.addEventListener('click', () =>{
     menuutili.classList.toggle('active');
 
 })
+
 const cloud = document.querySelector('.onlines');
 const cloudOn = document.querySelector('.ont');
 function onlineOffline(condizione){
