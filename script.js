@@ -617,6 +617,7 @@ require(['vs/editor/editor.main'], function () {
 
     //Crea Monaco Editor per editing testo
     let minimapEnabled = false;
+    let isDarkTheme = true;
     editor = monaco.editor.create(document.getElementById('editor-container'), {
         value: '',
         language: 'html', // Imposta un linguaggio di default
@@ -626,6 +627,17 @@ require(['vs/editor/editor.main'], function () {
             enabled: minimapEnabled  // button minimap
         }
     });
+
+    // Aggiungi evento per il pulsante di cambio tema
+    document.getElementById('toggle-theme').addEventListener('click', toggleTheme);
+    // Funzione per cambiare il tema
+    function toggleTheme() {
+        isDarkTheme = !isDarkTheme; // Cambia stato del tema
+        const newTheme = isDarkTheme ? 'vs-dark' : 'vs'; // Imposta il nuovo tema
+        monaco.editor.setTheme(newTheme); // Cambia il tema dell'editor
+    }
+
+
     // // Toggle minimap
     // document.getElementById('toggle-minimap').addEventListener('click', () => {
     //     minimapEnabled = !minimapEnabled; // Toggle state
