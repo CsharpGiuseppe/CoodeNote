@@ -864,3 +864,10 @@ async function isServerReachable() {
 
 // });
 
+const btnutil = document.querySelector('.util');
+let menuutili = document.querySelector('.utiliti');
+btnutil.addEventListener('click', () =>{
+
+    menuutili.classList.toggle('active');
+
+})

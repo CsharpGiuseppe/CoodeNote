@@ -212,64 +212,123 @@ width: 70px;
  color: rgb(196, 169, 32);
 
 }
-.database-controls{
-  border: 1px rgb(234, 234, 234) solid;
-  padding: 15px;
-  display: none;
+.menuUtiliti{
+  border: 1px rgb(255, 255, 255) solid;
+  border-radius: 5px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-left: -5px;
+}
+.menuUtiliti button{
+border: none;
+background: transparent;
+color: white;
+cursor: pointer;
+}
+.utiliti{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  top: 85px;
+  left: -1500px;
+  transition: all 0.9s !important;
   gap: 20px;
-  border-radius: 4px;
+  z-index: 9999;
+  width: 30%;
+  border-radius: 5px;
+  border: 1px rgb(211, 162, 17) solid;  
+  background-color: rgba(0, 0, 0, 0.915);
+  padding: 25px 5%;
+  transition: opacity 0.3s, visibility 0.9s;
+  overflow: hidden;
+  z-index: 99999;
+  opacity: 1;
+  visibility: hidden;
 }
-.database-controls button{
-  border: none;
+.utiliti.active{
+  top: 85px;
+  left: 0px;
+  opacity: 1;
+  visibility: visible;
+}
+.utiliti .preview-controls{
+  border: 1px rgb(250, 250, 250) solid;
   display: flex;
-  align-items: center;
-  justify-content: start;
-  background-color: transparent;
-  color: white;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 12px;
-  cursor: pointer;
-  transition: 0.4s;
+  flex-direction: column;
+  border-radius: 5px;
+  padding: 10px;
+ 
 }
-.database-controls button:hover{
-  color: rgb(203, 160, 21);
-}
-.database-controls label{
-  border: none;
+.utiliti .prev{
   display: flex;
+  flex-direction: column;
+  gap: 5px;
   align-items: center;
-  justify-content: start;
-  background-color: transparent;
-  color: white;
-  border-radius: 4px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 12px;
-  cursor: pointer;
-  transition: 0.4s;
+  justify-content: center;
 }
-.database-controls label:hover{
-  color: rgb(203, 160, 21);
-  }
-.database-controls button i{
-  color: white;
-  font-size: 18px;
+
+.utiliti .prev #open-in-new-tab{
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  padding: 5px;
+ 
 }
-.database-controls label i{
-  color: white;
-  font-size: 18px;
+.utiliti .prev .livw{
+  width: 180px;
+  display: flex;
+  gap: 10px;
+  padding: 5px;
+ 
 }
+.utiliti .database-controls{
+  border: 1px rgb(255, 255, 255) solid;
+  border-radius: 5px;
+  display: flex;
+  width: 200px;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+}
+.utiliti .database-controls #export-db{
+
+  display: flex;
+  gap: 10px;
+  padding: 5px;
+ 
+}
+.utiliti .database-controls #import-db{
+
+  display: flex;
+  gap: 10px;
+  padding: 5px;
+ 
+}
+
 
 @media screen and (max-width: 1200px) {
   .lang .hamburg {
     display: flex;
   }
-  .database-controls{
-    display: flex!important;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    border-radius: 4px;
-   
+  .menuUtiliti{
+    border: 1px rgb(255, 255, 255) solid;
+    border-radius: 5px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin-left: 5px;
+  }
+  .utiliti{
+  
+    width: 80%;
+  
   }
  .wrapperMenu{
   padding: 25px 15%;
@@ -301,16 +360,7 @@ width: 70px;
     visibility: visible;
   }
 
-  .preview-controls {
-    border-radius: 4px;
-    text-align: center;
-    display: flex!important;
-    flex-direction: column!important;
-    align-items: start;
-    justify-content: start!important;
-    padding: 8px;
-    width: 100%;
-  }
+ 
   .btnFind{
     width: 100%;
   }
@@ -391,20 +441,9 @@ width: 70px;
   border: none;
   width: 100%;
 }
-.preview-controls {
-  border: 1px rgb(234, 234, 234) solid;
-  text-align: center;
-  display: none;
 
-  gap: 5px;
-  justify-content: center;
-  border-radius: 4px;
-  flex-direction: row;
-
-  padding: 8px;
-}
-.prev {
-
+/* .prev {
+  border: 1px red solid;
   font-size: 18px;
   display: flex;
   flex-direction: row;
@@ -414,6 +453,7 @@ width: 70px;
   transition: 0.4s;
 }
 .prev i {
+  border: 1px red solid;
   padding: 0px;
   font-size: 18px;
   display: flex;
@@ -431,9 +471,9 @@ width: 70px;
 }
 .prev p:hover {
   color: rgb(203, 160, 21);
-}
+} */
 
-#open-in-new-tab {
+/* #open-in-new-tab {
   color: white;
   display: flex;
   align-items: center;
@@ -452,7 +492,7 @@ width: 70px;
 #open-in-new-tab i{
   color: white;
   font-size: 18px;
-}
+} */
 #toggle-emoji-picker{
   border: none;
   background: transparent;
