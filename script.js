@@ -401,10 +401,14 @@ function loadNotes() {
             });
 
             renderNotes(); // Aggiorna la lista delle note
+            console.log("ON-LINE");
+            onlineOffline("ON");
         })
         .catch(error => {
             console.warn('Errore durante il caricamento dal server remoto:', error);
             loadNotesFromDB(); // Fallback su IndexedDB
+            console.log("FF-LINE");
+            onlineOffline("OFF");
         });
 }
 
@@ -568,9 +572,6 @@ function applyHighlights(note) {
     decorations[note.id] = editor.deltaDecorations([], newDecorations);
 }
 
-
-
-
 // Salva la nota con evidenziatori
 function saveCurrentNote() {
     if (currentNoteId) {
@@ -609,6 +610,8 @@ function saveCurrentNote() {
             .then(data => {
                 if (data.status === 'success') {
                     console.log('Note synchronized with server:', noteToSave);
+                    console.log("ON-LINE");
+                    onlineOffline("ON");
                     note.needsSync = false; // Synchronization successful
                     saveNoteToDB(noteToSave); // Update IndexedDB
                 }
@@ -616,6 +619,9 @@ function saveCurrentNote() {
             .catch(error => {
                 console.error('Error synchronizing with server:', error.message);
             });
+        }else{
+            console.log("OFF-LINE");
+            onlineOffline("OFF");
         }
     }
 }
@@ -824,6 +830,7 @@ const MAX_RETRIES = 5; // Numero massimo di tentativi
 async function synchronizeWithRetry() {
     if (retryCount >= MAX_RETRIES) {
         console.error('Raggiunto il numero massimo di tentativi di sincronizzazione.');
+        console.log("OFF-LINE");
         return;
     }
 
@@ -831,6 +838,7 @@ async function synchronizeWithRetry() {
     if (serverReachable) {
         console.log('Connessione al server confermata, avvio sincronizzazione...');
         synchronizeData();
+    
         retryCount = 0; // Resetta i tentativi in caso di successo
     } else {
         console.warn(`Tentativo di sincronizzazione fallito. Riprovo tra 5 secondi... (${retryCount + 1}/${MAX_RETRIES})`);
@@ -849,21 +857,16 @@ window.addEventListener('online', () => {
 async function isServerReachable() {
     try {
         const response = await fetch(`${serverURL}/load.php`, { method: 'HEAD' });
+        console.log("ON-LINE");
+        onlineOffline("ON");
         return response.ok;
     } catch (error) {
         return false;
     }
 }
-// window.addEventListener('online', () => {
-//     // Azzero il timer
-//     clearTimeout(autoSaveTimeout1);
-//     this.autoSaveTimeout1 = setTimeout(() => {
-//         console.log('Connessione ripristinata, avvio sincronizzazione...');
-//         synchronizeData();
-//     }, 7000); //Eseguo la sincronizzazione dopo 7 secondi
+// End sync
 
-// });
-
+// Apri menu laterale utiliti
 const btnutil = document.querySelector('.util');
 let menuutili = document.querySelector('.utiliti');
 btnutil.addEventListener('click', () =>{
@@ -871,3 +874,21 @@ btnutil.addEventListener('click', () =>{
     menuutili.classList.toggle('active');
 
 })
+const cloud = document.querySelector('.onlines');
+const cloudOn = document.querySelector('.ont');
+function onlineOffline(condizione){
+    if(condizione === "ON")
+    {
+        cloud.innerHTML='<i class="ri-cloud-line"></i>';
+        cloudOn.innerHTML = '<p style=" color: green;"> on-line</p>';
+
+    }
+    else
+    {
+
+        cloud.innerHTML='<i class="ri-cloud-off-line"></i>';
+        cloudOn.innerHTML = '<p style=" color: red;"> off-line</p>';
+
+    }
+}
+

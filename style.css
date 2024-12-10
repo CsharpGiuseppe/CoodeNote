@@ -34,18 +34,17 @@ body {
   overflow: hidden;
   overflow-y: auto;
 }
-.sidebar .opeMenus{
+.sidebar .opeMenus {
   display: flex;
   gap: 5px;
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
   width: 100%;
-
 }
-.sidebar .opeMenus .ri-contract-left-right-fill{
-color: rgb(41, 102, 151);
-font-size: 30px;
+.sidebar .opeMenus .ri-contract-left-right-fill {
+  color: rgb(41, 102, 151);
+  font-size: 30px;
 }
 .sidebar.active {
   width: 300px !important;
@@ -111,7 +110,6 @@ font-size: 30px;
   padding: 0;
   display: block;
   user-select: none;
-
 }
 
 .sidebar li {
@@ -131,7 +129,7 @@ font-size: 30px;
   flex-grow: 1;
   font-size: 11px;
   margin-right: 10px;
-  color:#819ca8;
+  color: #819ca8;
 }
 
 .sidebar li .delete-note {
@@ -139,7 +137,7 @@ font-size: 30px;
   background-color: transparent;
   color: rgb(5, 154, 247);
   border: none;
-  font-size: 11px!important;
+  font-size: 11px !important;
   padding: 5px;
   cursor: pointer;
   font-size: 0.9em;
@@ -167,6 +165,26 @@ font-size: 30px;
   flex-direction: row;
   padding: 10px;
 }
+.lang .languaGe{
+  border: 1px rgb(255, 255, 255) solid;
+  margin-right: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: start;
+  justify-content: center;
+  height: 58px;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+}
+.lang .languaGe #language-selector {
+background-color: rgb(166, 149, 44);
+border: none;
+padding: 3px;
+border-radius: 3px;
+
+}
 .lang .hamburg {
   position: absolute;
   display: none;
@@ -189,30 +207,26 @@ font-size: 30px;
   gap: 10px;
   justify-content: start;
   transition: all 0.9s !important;
-
 }
-.lang .btnFind{
-
+.lang .btnFind {
   margin-right: 10px;
 }
 
-.lang .btnFind button{
- padding: 5px;
- height: 55px;
- background-color: transparent;
- border: 1px rgb(255, 255, 255) solid;
- color: white;
- cursor: pointer;
- border-radius: 5px;
- transition: 0.3s;
-width: 70px;
+.lang .btnFind button {
+  padding: 5px;
+  height: 55px;
+  background-color: transparent;
+  border: 1px rgb(255, 255, 255) solid;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+  width: 70px;
 }
-.lang .btnFind button:hover{
-
- color: rgb(196, 169, 32);
-
+.lang .btnFind button:hover {
+  color: rgb(196, 169, 32);
 }
-.menuUtiliti{
+.menuUtiliti {
   border: 1px rgb(255, 255, 255) solid;
   border-radius: 5px;
   height: 55px;
@@ -222,13 +236,13 @@ width: 70px;
   padding: 10px;
   margin-left: -5px;
 }
-.menuUtiliti button{
-border: none;
-background: transparent;
-color: white;
-cursor: pointer;
+.menuUtiliti button {
+  border: none;
+  background: transparent;
+  color: white;
+  cursor: pointer;
 }
-.utiliti{
+.utiliti {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -241,7 +255,7 @@ cursor: pointer;
   z-index: 9999;
   width: 30%;
   border-radius: 5px;
-  border: 1px rgb(211, 162, 17) solid;  
+  border: 1px rgb(211, 162, 17) solid;
   background-color: rgba(0, 0, 0, 0.915);
   padding: 25px 5%;
   transition: opacity 0.3s, visibility 0.9s;
@@ -250,21 +264,20 @@ cursor: pointer;
   opacity: 1;
   visibility: hidden;
 }
-.utiliti.active{
+.utiliti.active {
   top: 85px;
   left: 0px;
   opacity: 1;
   visibility: visible;
 }
-.utiliti .preview-controls{
+.utiliti .preview-controls {
   border: 1px rgb(250, 250, 250) solid;
   display: flex;
   flex-direction: column;
   border-radius: 5px;
   padding: 10px;
- 
 }
-.utiliti .prev{
+.utiliti .prev {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -272,21 +285,19 @@ cursor: pointer;
   justify-content: center;
 }
 
-.utiliti .prev #open-in-new-tab{
+.utiliti .prev #open-in-new-tab {
   width: 100%;
   display: flex;
   gap: 10px;
   padding: 5px;
- 
 }
-.utiliti .prev .livw{
+.utiliti .prev .livw {
   width: 180px;
   display: flex;
   gap: 10px;
   padding: 5px;
- 
 }
-.utiliti .database-controls{
+.utiliti .database-controls {
   border: 1px rgb(255, 255, 255) solid;
   border-radius: 5px;
   display: flex;
@@ -295,27 +306,22 @@ cursor: pointer;
   gap: 5px;
   padding: 10px;
 }
-.utiliti .database-controls #export-db{
-
+.utiliti .database-controls #export-db {
   display: flex;
   gap: 10px;
   padding: 5px;
- 
 }
-.utiliti .database-controls #import-db{
-
+.utiliti .database-controls #import-db {
   display: flex;
   gap: 10px;
   padding: 5px;
- 
 }
-
 
 @media screen and (max-width: 1200px) {
   .lang .hamburg {
     display: flex;
   }
-  .menuUtiliti{
+  .menuUtiliti {
     border: 1px rgb(255, 255, 255) solid;
     border-radius: 5px;
     height: 55px;
@@ -325,14 +331,12 @@ cursor: pointer;
     padding: 10px;
     margin-left: 5px;
   }
-  .utiliti{
-  
+  .utiliti {
     width: 80%;
-  
   }
- .wrapperMenu{
-  padding: 25px 15%;
- }
+  .wrapperMenu {
+    padding: 25px 15%;
+  }
   .lang .wrapperMenu {
     position: fixed;
     top: -1500px;
@@ -360,11 +364,10 @@ cursor: pointer;
     visibility: visible;
   }
 
- 
-  .btnFind{
+  .btnFind {
     width: 100%;
   }
-  .lang .btnFind button{
+  .lang .btnFind button {
     padding: 5px;
     height: 55px;
     background-color: transparent;
@@ -374,10 +377,10 @@ cursor: pointer;
     border-radius: 5px;
     transition: 0.3s;
     border: 1px rgb(255, 255, 255) solid;
-    width: 100%!important;
-    transform: translateX(5px)!important;
-   }
-   #toggle-emoji-picker{
+    width: 100% !important;
+    transform: translateX(5px) !important;
+  }
+  #toggle-emoji-picker {
     border: none;
     background: transparent;
     padding: 10px;
@@ -387,24 +390,12 @@ cursor: pointer;
     border-radius: 5px;
     height: 55px;
     width: 100%;
-    transform: translateX(-0px)!important;
+    transform: translateX(-0px) !important;
   }
- 
 }
-.wrapperOnline{
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-.wrapperOnline i{
- font-size: 18px!important;
-}
-#language-selector {
-  margin: 10px;
-  padding: 5px;
-  align-self: flex-start;
-}
+
+
+
 
 #editor-container {
   flex-grow: 1;
@@ -493,7 +484,7 @@ cursor: pointer;
   color: white;
   font-size: 18px;
 } */
-#toggle-emoji-picker{
+#toggle-emoji-picker {
   border: none;
   background: transparent;
   padding: 10px;
@@ -539,20 +530,20 @@ cursor: pointer;
   background-color: rgb(255, 0, 0);
   color: white;
 }
-.evidenzi{
+.evidenzi {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-.evidenzi #highlight-button{
+.evidenzi #highlight-button {
   border: 1px rgb(255, 255, 255) solid;
-background: rgba(255, 0, 0, 0.477);
-color: white;
-padding: 5px;
-border-radius: 5px;
-cursor: pointer;
+  background: rgba(255, 0, 0, 0.477);
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
 }
-.evidenzi #highlight-button:hover{
+.evidenzi #highlight-button:hover {
   background-color: #1a63ff;
 }
 #remove-highlight-button {
@@ -567,4 +558,24 @@ cursor: pointer;
 #remove-highlight-button:hover {
   background-color: #ff1a1a;
 }
-
+/* CLUD ONLINE */
+.wrapperOnline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  gap: 5px;
+}
+.ont{
+  font-size: 10px;
+ 
+}
+.ri-cloud-line {
+  color: rgb(47, 172, 255);
+  font-size: 20px;
+}
+.ri-cloud-off-line {
+  color: red;
+  font-size: 20px;
+}

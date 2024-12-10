@@ -41,17 +41,19 @@
     <div class="editor">
       <div class="lang">
 
-
-        <p>Language</p>
-        <select id="language-selector">
-          <option value="html">HTML</option>
-          <option value="php">PHP</option>
-          <option value="csharp">C#</option>
-          <option value="javascript">JavaScript</option>
-          <option value="cpp">C++</option>
-          <option value="css">CSS</option>
-          <option value="note">NotePad</option>
-        </select>
+        <div class="languaGe">
+          <p>Language</p>
+          <select id="language-selector">
+            <option value="html">HTML</option>
+            <option value="php">PHP</option>
+            <option value="csharp">C#</option>
+            <option value="javascript">JavaScript</option>
+            <option value="cpp">C++</option>
+            <option value="css">CSS</option>
+            <option value="note">NotePad</option>
+          </select>
+        </div>
+       
 
         <div class="evidenzi">
           <button id="highlight-button">Evidenzia</button>
@@ -149,11 +151,13 @@
               File
             </label>
           </div>
-          <!-- Online cloud -->
-          <!-- <div class="wrapperOnline">
-            <p>Cloud:</p>
-            <p id="online" class="onlines"></p>
-          </div> -->
+         
+        </div>
+
+        <!-- Online cloud -->
+        <div class="wrapperOnline">
+          <p id="online" class="onlines"></p>
+          <p class="ont"></p>
         </div>
 
         <!-- Hamburger menu -->
@@ -167,7 +171,10 @@
         <p>Live Preview</p>
         <iframe id="preview-frame"></iframe>
       </div>
+
+      
     </div>
+    
   </div>
 
   <script src="script.js"></script>
