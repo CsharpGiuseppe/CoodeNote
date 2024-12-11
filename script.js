@@ -752,12 +752,12 @@ require(['vs/editor/editor.main'], function () {
     });
 
     //MENU HAMBURGER
-    const openMenu = document.getElementById("btn44");
-    const formCon2i = document.querySelector(".wrapperMenu");
-    openMenu.addEventListener("click", showForm2i);
-    function showForm2i() {
-        formCon2i.classList.toggle('active');
-    }
+    // const openMenu = document.getElementById("btn44");
+    // const formCon2i = document.querySelector(".wrapperMenu");
+    // openMenu.addEventListener("click", showForm2i);
+    // function showForm2i() {
+    //     formCon2i.classList.toggle('active');
+    // }
 
     //TATO PREVIEW
     const btnPrev = document.querySelector('.prev');
@@ -795,10 +795,18 @@ require(['vs/editor/editor.main'], function () {
     // });
 
     // Mostra o nasconde il selettore di emoji
-    document.getElementById('toggle-emoji-picker').addEventListener('click', () => {
-        const emojiPicker = document.getElementById('emoji-picker');
-        emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
-    });
+    const emojiPicker = document.getElementById('toggle-emoji-picker');
+    const menuemoji = document.getElementById('emoji-picker');
+    emojiPicker.addEventListener('click', () => {
+
+        menuemoji.classList.toggle('active');
+    
+    })
+    // document.getElementById('toggle-emoji-picker').addEventListener('click', () => {
+        
+    //     // emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
+    //     emojiPicker.classList.toggle('active')
+    // });
 
     // Gestisce il clic sulle emoji
     document.querySelectorAll('.emoji').forEach(emojiElement => {
