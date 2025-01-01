@@ -614,27 +614,148 @@ function saveCurrentNote() {
 
 // Crea Monaco Editor per editing testo
 require(['vs/editor/editor.main'], function () {
+    // Definisci un tema personalizzato
+    monaco.editor.defineTheme('my-custom-theme', {
+        base: 'vs-dark', // Puoi partire da un tema esistente (vs, vs-dark, hc-black)
+        inherit: true, // Eredita le regole del tema base
+        rules: [
+            // Regole generiche
+            { token: 'comment', foreground: 'FFA500', fontStyle: 'italic' }, // Commenti arancioni e in corsivo
+            { token: 'keyword', foreground: '00FF00' }, // Parole chiave verdi (Lime)
+            { token: 'string', foreground: 'FF0000' }, // Stringhe rosse (Red)
+            { token: 'number', foreground: '00FFFF' }, // Numeri ciano (Cyan)
+            { token: 'identifier', foreground: 'FFFFFF' }, // Identificatori bianchi (White)
+            { token: 'type', foreground: '00FF00', fontStyle: 'bold' }, // Tipi di dati verdi (Lime) e in grassetto
 
+            // JavaScript/TypeScript
+            { token: 'keyword.js', foreground: '00FF00' }, // Parole chiave verdi (Lime)
+            { token: 'string.js', foreground: 'FF0000' }, // Stringhe rosse (Red)
+            { token: 'comment.js', foreground: 'FFA500', fontStyle: 'italic' }, // Commenti arancioni (Orange) e in corsivo
+            { token: 'number.js', foreground: '00FFFF' }, // Numeri ciano (Cyan)
+            { token: 'identifier.js', foreground: 'FFFFFF' }, // Identificatori bianchi (White)
+            { token: 'type.js', foreground: '00FF00', fontStyle: 'bold' }, // Tipi di dati verdi (Lime) e in grassetto
+
+            // C#
+            { token: 'keyword.cs', foreground: '00FF00' }, // Parole chiave verdi (Lime)
+            { token: 'string.cs', foreground: 'FF0000' }, // Stringhe rosse (Red)
+            { token: 'comment.cs', foreground: 'FFA500', fontStyle: 'italic' }, // Commenti arancioni (Orange) e in corsivo
+            { token: 'number.cs', foreground: '00FFFF' }, // Numeri ciano (Cyan)
+            { token: 'identifier.cs', foreground: 'FFFFFF' }, // Identificatori bianchi (White)
+            { token: 'type.cs', foreground: '00FF00', fontStyle: 'bold' }, // Tipi di dati verdi (Lime) e in grassetto
+
+            // Python
+            { token: 'keyword.py', foreground: '00FF00' }, // Parole chiave verdi (Lime)
+            { token: 'string.py', foreground: 'FF0000' }, // Stringhe rosse (Red)
+            { token: 'comment.py', foreground: 'FFA500', fontStyle: 'italic' }, // Commenti arancioni (Orange) e in corsivo
+            { token: 'number.py', foreground: '00FFFF' }, // Numeri ciano (Cyan)
+            { token: 'identifier.py', foreground: 'FFFFFF' }, // Identificatori bianchi (White)
+            { token: 'type.py', foreground: '00FF00', fontStyle: 'bold' }, // Tipi di dati verdi (Lime) e in grassetto
+
+            // HTML
+            { token: 'tag.html', foreground: '00FF00' }, // Tag HTML verdi (Lime)
+            { token: 'attribute.name.html', foreground: 'FF0000' }, // Nomi degli attributi rossi (Red)
+            { token: 'attribute.value.html', foreground: '00FFFF' }, // Valori degli attributi ciano (Cyan)
+            { token: 'comment.html', foreground: 'FFA500', fontStyle: 'italic' }, // Commenti arancioni (Orange) e in corsivo
+
+            // CSS
+            { token: 'keyword.css', foreground: '00FF00' }, // Parole chiave verdi (Lime)
+            { token: 'string.css', foreground: 'FF0000' }, // Stringhe rosse (Red)
+            { token: 'comment.css', foreground: 'FFA500', fontStyle: 'italic' }, // Commenti arancioni (Orange) e in corsivo
+            { token: 'number.css', foreground: '00FFFF' }, // Numeri ciano (Cyan)
+            { token: 'identifier.css', foreground: 'FFFFFF' }, // Identificatori bianchi (White)
+            { token: 'type.css', foreground: '00FF00', fontStyle: 'bold' }, // Tipi di dati verdi (Lime) e in grassetto
+
+            // C++
+            { token: 'keyword.cpp', foreground: '00FF00' }, // Parole chiave verdi (Lime)
+            { token: 'string.cpp', foreground: 'FF0000' }, // Stringhe rosse (Red)
+            { token: 'comment.cpp', foreground: 'FFA500', fontStyle: 'italic' }, // Commenti arancioni (Orange) e in corsivo
+            { token: 'number.cpp', foreground: '00FFFF' }, // Numeri ciano (Cyan)
+            { token: 'identifier.cpp', foreground: 'FFFFFF' }, // Identificatori bianchi (White)
+            { token: 'type.cpp', foreground: '00FF00', fontStyle: 'bold' }, // Tipi di dati verdi (Lime) e in grassetto
+            { token: 'operator.cpp', foreground: 'FF00FF' }, // Operatori magenta (Magenta)
+            { token: 'preprocessor.cpp', foreground: '00FF00' }, // Direttive del preprocessore verdi (Lime)
+
+            // // C++
+            // { token: 'keyword.cpp', foreground: '00FF00' }, // Parole chiave verdi (Lime)
+            // { token: 'void.cpp', foreground: '0000FF' }, // `void` blu (Blue)
+            // { token: 'string.cpp', foreground: 'FF0000' }, // Stringhe rosse (Red)
+            // { token: 'comment.cpp', foreground: 'FFA500', fontStyle: 'italic' }, // Commenti arancioni (Orange) e in corsivo
+            // { token: 'number.cpp', foreground: '00FFFF' }, // Numeri ciano (Cyan)
+            // { token: 'identifier.cpp', foreground: 'FFFFFF' }, // Identificatori bianchi (White)
+            // { token: 'type.cpp', foreground: '00FF00', fontStyle: 'bold' }, // Tipi di dati verdi (Lime) e in grassetto
+            // { token: 'operator.cpp', foreground: 'FF00FF' }, // Operatori magenta (Magenta)
+            // { token: 'preprocessor.cpp', foreground: '00FF00' }, // Direttive del preprocessore verdi (Lime)
+
+            // PHP
+            { token: 'keyword.php', foreground: '00FF00' }, // Parole chiave verdi (Lime)
+            { token: 'string.php', foreground: 'FF0000' }, // Stringhe rosse (Red)
+            { token: 'comment.php', foreground: 'FFA500', fontStyle: 'italic' }, // Commenti arancioni (Orange) e in corsivo
+            { token: 'number.php', foreground: '00FFFF' }, // Numeri ciano (Cyan)
+            { token: 'identifier.php', foreground: 'FFFFFF' }, // Identificatori bianchi (White)
+            { token: 'type.php', foreground: '00FF00', fontStyle: 'bold' }, // Tipi di dati verdi (Lime) e in grassetto
+            { token: 'variable.php', foreground: 'FF00FF' }, // Variabili magenta (Magenta)
+            { token: 'function.php', foreground: '0000FF' }, // Funzioni blu (Blue)
+
+            // Note (Testo Semplice)
+            { token: 'text.note', foreground: '800080' }, // Testo normale bianco (White)
+            { token: 'keyword.note', foreground: '800080' }, // Parole chiave verdi (Lime)
+            { token: 'comment.note', foreground: '800080', fontStyle: 'bold' }, // Commenti arancioni (Orange) e in corsivo
+            { token: 'string.note', foreground: '800080' }, // Stringhe rosse (Red)
+            { token: 'number.note', foreground: '800080' }, // Numeri ciano (Cyan)
+
+
+        ],
+        colors: {
+            'editor.background': '#000000', // Colore di sfondo nero (Black)
+            'editor.foreground': '#FFFFFF', // Colore del testo bianco (White)
+            'editorCursor.foreground': '#FFFFFF', // Colore del cursore bianco (White)
+        }
+    });
+    monaco.languages.register({ id: 'cpp' });
+
+    // monaco.languages.setMonarchTokensProvider('cpp', {
+    //     keywords: [
+    //         'int', 'float', 'double', 'char', 'if', 'else', 'while', 'for', 'return', 'class', 'struct', 'namespace', 'public', 'private', 'protected', 'new', 'delete', 'true', 'false'
+    //     ],
+    //     tokenizer: {
+    //         root: [
+    //             // Classifica `void` come un token personalizzato
+    //             [/void\b/, 'void.cpp'],
+
+    //             // Altre regole del tokenizer
+    //             [/[a-zA-Z_]\w*/, {
+    //                 cases: {
+    //                     '@keywords': 'keyword.cpp', // Parole chiave standard
+    //                     '@default': 'identifier.cpp' // Identificatori
+    //                 }
+    //             }],
+    //             // ... (altre regole del tokenizer)
+    //         ]
+    //     }
+    // });
     //Crea Monaco Editor per editing testo
     let minimapEnabled = false;
     let isDarkTheme = true;
     editor = monaco.editor.create(document.getElementById('editor-container'), {
         value: '',
         language: 'html', // Imposta un linguaggio di default
-        theme: 'vs-dark', // Tema scuro
+        theme: 'hc-black', // Usa il tema personalizzato
         automaticLayout: true,
         minimap: {
             enabled: minimapEnabled  // button minimap
         }
     });
 
+    let themeIndex = 0; // Contatore per il tema corrente
+    const themes = ['my-custom-theme', 'vs-dark', 'hc-black', 'vs']; // Array di temi disponibil
     // Aggiungi evento per il pulsante di cambio tema
     document.getElementById('toggle-theme').addEventListener('click', toggleTheme);
-    // Funzione per cambiare il tema
+
     function toggleTheme() {
-        isDarkTheme = !isDarkTheme; // Cambia stato del tema
-        const newTheme = isDarkTheme ? 'vs-dark' : 'vs'; // Imposta il nuovo tema
+        themeIndex = (themeIndex + 1) % themes.length; // Passa al tema successivo
+        const newTheme = themes[themeIndex]; // Ottieni il nuovo tema
         monaco.editor.setTheme(newTheme); // Cambia il tema dell'editor
+        // console.log('Tema attivo:', newTheme); // Debug: stampa il tema corrente
     }
 
 
@@ -800,10 +921,10 @@ require(['vs/editor/editor.main'], function () {
     emojiPicker.addEventListener('click', () => {
 
         menuemoji.classList.toggle('active');
-    
+
     })
     // document.getElementById('toggle-emoji-picker').addEventListener('click', () => {
-        
+
     //     // emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
     //     emojiPicker.classList.toggle('active')
     // });
