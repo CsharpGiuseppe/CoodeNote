@@ -252,9 +252,8 @@ border-radius: 3px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  top: 97px;
-  left: 0;
-  transition: all 0.4s !important;
+  top: -500px;
+  left: -500!important;
   gap: 20px;
   z-index: 9999;
   width: 30%;
@@ -262,7 +261,7 @@ border-radius: 3px;
   border: 1px rgb(211, 162, 17) solid;
   background-color: rgba(0, 0, 0, 0.915);
   padding: 25px 5%;
-  transition: opacity 0.2s, visibility 0.3s;
+  transition: opacity 0.5s, visibility 0.1s;
   overflow: hidden;
   z-index: 99999;
   opacity: 0;
@@ -270,9 +269,7 @@ border-radius: 3px;
 }
 .utiliti.active {
   top: 97px;
-  left: 0;
   opacity: 1;
-
 }
 .lang .toggle {
   border: 1px rgb(250, 250, 250) solid;
