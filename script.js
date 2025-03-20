@@ -198,11 +198,17 @@ async function synchronizeData() {
 // Seleziona una nota
 // Al caricamento di una nota, applica gli evidenziatori
 // Selezione di una nota (ripristina gli evidenziatori)
+// Modifica la funzione selectNote (circa linea 201)
 function selectNote(noteId) {
     currentNoteId = noteId;
     const note = notes[noteId];
     editor.setModel(note.model); // Imposta il modello della nota
     applyHighlights(note); // Applica gli evidenziatori
+    
+    // Aggiorna i link cliccabili con un piccolo ritardo per assicurarsi che l'editor sia pronto
+    setTimeout(() => {
+        updateClickableLinks();
+    }, 100);
 }
 
 //Salvo le note per backup nel database txt
@@ -315,8 +321,7 @@ function saveNoteToDB(note) {
         console.error('Errore nel salvataggio della nota:', event.target.error);
     };
 }
-
-// Carica tutte le note da IndexedDB
+//Carica Note
 function loadNotesFromDB() {
     const transaction = db.transaction(['notes'], 'readonly');
     const store = transaction.objectStore('notes');
@@ -336,11 +341,16 @@ function loadNotesFromDB() {
 
         renderNotes(); // Ricostruisce l'interfaccia con le note caricate
         console.log('Note caricate da IndexedDB:', savedNotes);
+        
+        // Se c'è una nota corrente selezionata, aggiorna i link cliccabili
+        if (currentNoteId) {
+            setTimeout(() => {
+                updateClickableLinks();
+            }, 200);
+        }
     };
 
-    request.onerror = (event) => {
-        console.error('Errore nel caricamento delle note da IndexedDB:', event.target.error);
-    };
+    // ... existing code ...
 }
 
 // Cancella una nota da IndexedDB
@@ -415,12 +425,14 @@ function loadNotes() {
             renderNotes(); // Aggiorna la lista delle note
             console.log("ON-LINE");
             onlineOffline("ON");
+            
+            // Se c'è una nota corrente selezionata, aggiorna i link cliccabili
+            if (currentNoteId) {
+                updateClickableLinks();
+            }
         })
         .catch(error => {
-            console.warn('Errore durante il caricamento dal server remoto:', error);
-            loadNotesFromDB(); // Fallback su IndexedDB
-            console.log("FF-LINE");
-            onlineOffline("OFF");
+            // ... existing code ...
         });
 }
 
@@ -745,6 +757,129 @@ require(['vs/editor/editor.main'], function () {
             enabled: minimapEnabled  // button minimap
         }
     });
+ // Inserisci qui il codice per l'anteprima delle immagini
+    // Aggiungi questo stile CSS per il popup dell'immagine
+    const imagePreviewStyle = document.createElement('style');
+    imagePreviewStyle.textContent = `
+    .image-preview-popup {
+        position: fixed;
+        background-color: #1e1e1e;
+        border: 1px solid #444;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        z-index: 1000;
+        max-width: 300px;
+        max-height: 300px;
+        display: none;
+    }
+    .image-preview-popup img {
+        max-width: 100%;
+        max-height: 280px;
+        object-fit: contain;
+    }
+    `;
+    document.head.appendChild(imagePreviewStyle);
+
+    // Crea l'elemento popup per l'anteprima
+    const imagePreviewPopup = document.createElement('div');
+    imagePreviewPopup.className = 'image-preview-popup';
+    document.body.appendChild(imagePreviewPopup);
+
+    // Aggiungi event listener per mostrare il popup al passaggio del mouse
+    editor.onMouseMove((e) => {
+        if (e.target.type === monaco.editor.MouseTargetType.CONTENT_TEXT) {
+            const decorations = editor.getModel().getDecorationsInRange(new monaco.Range(
+                e.target.position.lineNumber,
+                e.target.position.column,
+                e.target.position.lineNumber,
+                e.target.position.column
+            ));
+            
+            let isOverLink = false;
+            for (const decoration of decorations) {
+                if (decoration.options.inlineClassName === 'clickable-link') {
+                    isOverLink = true;
+                    const range = editor.getModel().getDecorationRange(decoration.id);
+                    const url = editor.getModel().getValueInRange(range);
+                    
+                    // Mostra il popup con l'anteprima dell'immagine
+                    imagePreviewPopup.innerHTML = `<img src="${url}" alt="Anteprima">`;
+                    imagePreviewPopup.style.display = 'block';
+                    imagePreviewPopup.style.left = (e.event.posx + 15) + 'px';
+                    imagePreviewPopup.style.top = (e.event.posy + 15) + 'px';
+                    break;
+                }
+            }
+            
+            if (!isOverLink) {
+                imagePreviewPopup.style.display = 'none';
+            }
+        } else {
+            imagePreviewPopup.style.display = 'none';
+        }
+    });
+
+    // Nascondi il popup quando il mouse esce dall'editor
+    document.getElementById('editor-container').addEventListener('mouseleave', () => {
+        imagePreviewPopup.style.display = 'none';
+    });
+
+    // Aggiungi stile CSS per i link cliccabili
+    const style = document.createElement('style');
+    style.textContent = `
+    .clickable-link {
+        text-decoration: underline !important;
+        color:rgb(251, 169, 4) !important;
+      
+        cursor: pointer !important;
+    }
+    `;
+    document.head.appendChild(style);
+
+    // Gestisci il click sui link
+     // Gestisci il click sui link con supporto migliorato
+     editor.onMouseDown((e) => {
+        if (e.target.type === monaco.editor.MouseTargetType.CONTENT_TEXT) {
+            const decorations = editor.getModel().getDecorationsInRange(new monaco.Range(
+                e.target.position.lineNumber,
+                e.target.position.column,
+                e.target.position.lineNumber,
+                e.target.position.column
+            ));
+            
+            for (const decoration of decorations) {
+                if (decoration.options.inlineClassName === 'clickable-link') {
+                    const range = editor.getModel().getDecorationRange(decoration.id);
+                    const url = editor.getModel().getValueInRange(range);
+                    window.open(url, '_blank');
+                    break;
+                }
+            }
+        }
+    });
+
+
+// Aggiungi più event listener per assicurarti che i link vengano aggiornati in vari momenti
+editor.onDidFocusEditorText(() => {
+    if (currentNoteId) {
+        updateClickableLinks();
+    }
+});
+
+editor.onDidChangeModel(() => {
+    if (currentNoteId) {
+        setTimeout(() => {
+            updateClickableLinks();
+        }, 100);
+    }
+});
+
+    // Aggiungi event listener per il pulsante di inserimento link immagine
+    document.getElementById('insert-image-link').addEventListener('click', insertImageLink);
+
+
+
 
     let themeIndex = 0; // Contatore per il tema corrente
     const themes = ['my-custom-theme', 'vs-dark', 'hc-black', 'vs']; // Array di temi disponibil
@@ -769,6 +904,86 @@ require(['vs/editor/editor.main'], function () {
         minimapEnabled = !minimapEnabled; // Cambia stato
         editor.updateOptions({ minimap: { enabled: minimapEnabled } }); // Aggiorna le opzioni dell'editor
     }
+
+
+// Dopo la funzione toggleMinimap() (circa linea 772)
+
+// Funzione per inserire un link a un'immagine
+function insertImageLink() {
+    const imageUrl = prompt('Inserisci l\'URL dell\'immagine:');
+    if (imageUrl && imageUrl.trim() !== '') {
+        // Inserisci nel punto del cursore
+        const editorModel = editor.getModel();
+        const selection = editor.getSelection();
+        const startOffset = editorModel.getOffsetAt(selection.getStartPosition());
+        const endOffset = editorModel.getOffsetAt(selection.getEndPosition());
+        const content = editorModel.getValue();
+        const before = content.slice(0, startOffset);
+        const after = content.slice(endOffset);
+        
+        // Aggiorna il contenuto con il link
+        const updatedContent = before + imageUrl + after;
+        editorModel.setValue(updatedContent);
+        
+        // Posiziona il cursore alla fine del link inserito
+        const newCursorOffset = startOffset + imageUrl.length;
+        const newCursorPosition = editorModel.getPositionAt(newCursorOffset);
+        editor.setPosition(newCursorPosition);
+        
+        // Aggiorna i link cliccabili
+        updateClickableLinks();
+    }
+}
+
+// Array per tenere traccia delle decorazioni dei link
+let linkDecorations = [];
+
+// Funzione per aggiornare i link cliccabili nell'editor
+// Modifica la funzione updateClickableLinks per renderla più robusta
+// Funzione per aggiornare i link cliccabili nell'editor
+function updateClickableLinks() {
+    if (!currentNoteId || !editor.getModel()) return;
+    
+    const content = editor.getValue();
+    const model = editor.getModel();
+    
+    // Rimuovi decorazioni precedenti
+    linkDecorations = editor.deltaDecorations(linkDecorations, []);
+    
+    // Regex per trovare URL di immagini (jpg, jpeg, png, gif, webp)
+    const imageUrlRegex = /(https?:\/\/[^\s]+\.(jpg|jpeg|png|gif|webp))/gi;
+    
+    const newDecorations = [];
+    let match;
+    
+    while ((match = imageUrlRegex.exec(content)) !== null) {
+        const url = match[0];
+        const startPos = model.getPositionAt(match.index);
+        const endPos = model.getPositionAt(match.index + url.length);
+        
+        newDecorations.push({
+            range: new monaco.Range(
+                startPos.lineNumber,
+                startPos.column,
+                endPos.lineNumber,
+                endPos.column
+            ),
+            options: {
+                inlineClassName: 'clickable-link',
+                hoverMessage: { value: 'Clicca per aprire l\'immagine' },
+                stickiness: monaco.editor.TrackedRangeStickiness.NeverGrowsWhenTypingAtEdges
+            }
+        });
+    }
+    
+    linkDecorations = editor.deltaDecorations([], newDecorations);
+    console.log("Link aggiornati:", newDecorations.length);
+}
+
+
+
+
+
 
     // Aggiungi evento per il pulsante
     document.getElementById('toggle-minimap').addEventListener('click', toggleMinimap);
@@ -815,37 +1030,41 @@ require(['vs/editor/editor.main'], function () {
     });
     //oggi
     let autoSaveTimeout;
-    editor.onDidChangeModelContent(() => {
-        if (currentNoteId) {
-            const note = notes[currentNoteId];
+    // Modifica l'event listener onDidChangeModelContent (circa linea 818)
+editor.onDidChangeModelContent(() => {
+    if (currentNoteId) {
+        const note = notes[currentNoteId];
 
-            // Aggiorna i range degli evidenziatori
-            if (decorations[note.id]) {
-                decorations[note.id].forEach((decorationId, index) => {
-                    const decorationRange = editor.getModel().getDecorationRange(decorationId);
-                    if (decorationRange) {
-                        const startOffset = editor.getModel().getOffsetAt(decorationRange.getStartPosition());
-                        const endOffset = editor.getModel().getOffsetAt(decorationRange.getEndPosition());
-                        note.highlights[index] = { start: startOffset, end: endOffset };
-                    }
-                });
-            }
-            saveCurrentNote();
-            // Salva automaticamente
-            clearTimeout(autoSaveTimeout);
-            autoSaveTimeout = setTimeout(() => {
-                saveCurrentNote();
-                console.log('Auto-saved note:', notes[currentNoteId]);
-            }, 500);
-
-            // Anteprima live per HTML
-            const language = note.language || 'html';
-            if (language === 'html') {
-                const iframe = document.getElementById('preview-frame');
-                iframe.srcdoc = editor.getValue();
-            }
+        // Aggiorna i range degli evidenziatori
+        if (decorations[note.id]) {
+            decorations[note.id].forEach((decorationId, index) => {
+                const decorationRange = editor.getModel().getDecorationRange(decorationId);
+                if (decorationRange) {
+                    const startOffset = editor.getModel().getOffsetAt(decorationRange.getStartPosition());
+                    const endOffset = editor.getModel().getOffsetAt(decorationRange.getEndPosition());
+                    note.highlights[index] = { start: startOffset, end: endOffset };
+                }
+            });
         }
-    });
+        saveCurrentNote();
+        // Salva automaticamente
+        clearTimeout(autoSaveTimeout);
+        autoSaveTimeout = setTimeout(() => {
+            saveCurrentNote();
+            console.log('Auto-saved note:', notes[currentNoteId]);
+        }, 500);
+
+        // Anteprima live per HTML
+        const language = note.language || 'html';
+        if (language === 'html') {
+            const iframe = document.getElementById('preview-frame');
+            iframe.srcdoc = editor.getValue();
+        }
+        
+        // Aggiorna i link cliccabili
+        updateClickableLinks();
+    }
+});
 
     //Apri anteprima del codice solo se HTML nel Browser
     document.getElementById('open-in-new-tab').addEventListener('click', () => {
@@ -944,7 +1163,20 @@ require(['vs/editor/editor.main'], function () {
     });
 
 
+// Aggiungi più event listener per assicurarti che i link vengano aggiornati in vari momenti
+editor.onDidFocusEditorText(() => {
+    if (currentNoteId) {
+        updateClickableLinks();
+    }
+});
 
+editor.onDidChangeModel(() => {
+    if (currentNoteId) {
+        setTimeout(() => {
+            updateClickableLinks();
+        }, 100);
+    }
+});
 
     saveCurrentNote();
     // Inizializza IndexedDB e carica note salvate
